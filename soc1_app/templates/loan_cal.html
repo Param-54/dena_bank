@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}   
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/css/f1.css' %}">
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
+    <title>Member Detail</title>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div style="width: 100%; height: 825px; margin:auto; border: 1px solid black; background-color: blue;">
+        <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
+            <h5 class="text-center text-danger my-3">Loan Calculation of member</h5>
+        </div>
+        
+                <form action="{% url 'loancal' %}"  method="post">
+                {% csrf_token %} 
+                    <div class="mainint">
+                        <div class="intr1">
+                            <div class="intr1c1">
+                                <label class-"form-label" class="md-3 ml-8" >Member Name</label>
+                                <select name="mem_name" id="memnm" class="form-control" class="form-select"  onchange="grp_select()" >
+                                    <option  value="{{mem_det.mem_no}}" selected >{{mem_det.mem_name}} </option>
+                                {% for memdt in mem_det %}
+                                    <option value={{memdt.member_no}}>{{memdt.name}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="intr2">
+                            <label class-"form-label"  class="md-3 ml-8" >Date Of Voucher</label>
+                            <input type="date"  class="form-control" name="loan_stdt" id="loan_db" placeholder="Date"  value={{v_dt|date:"Y-m-d"}} autocomplete="off" required maxlength="10" size="10">
+                        </div>                
+
+                        <div class="intr2">
+                            <label for="mem_amt">Loan Amount</label>
+                            <input type="number" class="form-control" name="loan_amt" id="mem_amt"   placeholder="Loan Amount"  autocomplete="off"  required  maxlength="4" size="7">
+                            <small style="color: yellow ; font-size: 15px;font-weight: bold" id="name_chk"></small>
+                        </div>
+                        <div class="intr2">
+                            <label for="mem_mn">Duration [Months]</label>
+                            <input type="number" class="form-control" name="loan_Month" id="mem_mn"   placeholder="Months"    autocomplete="off"  required  maxlength="4" size="7">
+                            <small style="color: yellow ; font-size: 15px;font-weight: bold" id="name_chk"></small>
+                        </div>
+                        <div class="intr2">
+                            <label for="mem_rt">Int Rate</label>
+                            <input type="number" class="form-control" name="int_rate" id="mem_rt"   placeholder="Interest year"    autocomplete="off"  required  maxlength="4" size="5">
+                            <small style="color: yellow ; font-size: 15px;font-weight: bold" id="name_chk"></small>
+                        </div>
+                        <div class="intr2">
+                                <label >Account Name</label>
+                                <input type="Text"  class="form-control"  name="acc_name"   id="accnm"  autocomplete="off" value = "{{mem_name}}" placeholder="Account Name" required   maxlength="40" size="40">
+                        </div>
+                        <div class="intr2">
+                                <label >Account Group</label> <br>
+                                <select name="group" id="grp_id" class="form-control" class="form-select" onchange="grp_select()" >
+                                    <option  selected > Choose Group </option>
+                                    {% for x in grp_data %}
+                                    <option value="{{x.id}}">{{x.grp_name}}</option>
+                                    {% endfor %}
+                                </select>
+                        </div>
+                        <br>
+                        <div class="container text-center my-1" >
+                            <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" type="submit">Save</button>
+                            <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}" >Exit</a></button>
+                        </div> 
+                        {% if msg  %}
+                            <div class="alert alert-danger" role="alert">
+                                {{msg}}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                </form>
+    </div>           
+</body>
+    <script type="text/javascript" src="{% static '/js/first.js' %}"></script>
+    <script>
+        function grp_select(){
+            gpid= document.getElementById("tr_id").value;
+            gpname = document.getElementsByName("tr_type").value;
+        } 
+    </script>
+</html>

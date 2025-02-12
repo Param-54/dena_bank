@@ -1,0 +1,44 @@
+<html>
+<body>
+  <script>
+    var margin = 0;
+
+    function leftmove() {
+      margin += 2;
+      box.style.marginLeft = margin + "px";
+    }
+
+    function rightmove() {
+      margin -= 2;
+      box.style.marginLeft = margin + "px";
+    }
+
+    function upmove() {
+      margin += 2;
+      box.style.marginTop = margin + "px";
+    }
+    var box = document.getElementById("box");
+
+    function downmove() {
+      margin -= 2;
+      box.style.marginLeft = margin + "px";
+    }
+  </script>
+
+  <button onclick="leftmove()" id="b1"> Left </button>
+  <button onclick="rightmove()" id="b2"> Right </button>
+  <button onclick="upmove()" id="b3"> Up </button>
+  <button onclick="downmove()" id="b4"> Down </button>
+  <h1 id="box"></h1>
+  <style type="text/css">
+    #box {
+      width: 50px;
+      height: 50px;
+      background-color: black;
+    }
+  </style>
+  <script>
+    var box = document.getElementById("box");
+  </script>
+</body>
+</html>

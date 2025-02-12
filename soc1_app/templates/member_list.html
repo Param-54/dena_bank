@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        table,th,td{
+            height:7px;
+            border: 1px solid black;
+            margin: auto;
+        }
+        table{
+            border-radius: 10px;
+        }
+        tr{
+            background-color: #96D4D4;
+        }
+        th {
+            background-color: aqua;
+        }
+    </style>
+    <title>Member List</title>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="main_div_form">
+
+            <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
+                <h4 class="text-center text-danger my-3">Member List</h4>
+            </div>
+        <!-- <div style="overflow-x: auto;" >
+                <div class="col=md-12 offset-md-3">  border="2" cellspacing="7"  class="table table-striped"-->
+                        <table >
+                            <thead>
+                                <tr align="center">
+                                    <th>Mem No</th>
+                                    <th>Name</th>
+                                    <th>Date of Birth</th>
+                                    <th>Sex</th>
+                                    <th>Phone</th>
+                                    <th>Address</th>
+                                    <th>Nominee</th>
+                                    <th  colspan="2" align="text-center" >Action</th>
+                                    <button style= "background-color: azure;   margin-left: 1290px; border-radius: 10px; "><a href="{% url 'detail' %}" >Add New</a>
+                                    <button style= " background-color: azure;border-radius:10px;"><a href="{% url 'main' %}" >Main Maenu</a>
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                {% for mem in mem_data %}
+                                    <tr>
+                                        <td>{{mem.member_no}}</td>
+                                        <td>{{mem.name}}</td>
+                                        <td>{{mem.dob}}</td>
+                                        <td>{{mem.mem_sex_val}}</td>
+                                        <td>{{mem.phone}}</td>
+                                        <td>{{mem.address}}</td>
+                                        <td>{{mem.nominee}}</td>
+                                        <td><button style="width:75px; background-color: azure; border-radius: 10px;"><a href="{% url 'update' mem.member_no %}">Edit</a></button></td>
+                                        <td><button style=" width: 75px; background-color: red;border-radius:10px;"><a href="{% url 'del' mem.member_no %}">Del</a></button></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    <!-- </div>
+    </div> -->
+    </div>    
+</body>
+
+</html>

@@ -1,0 +1,298 @@
+<div class="container text-white  pt-10">
+    <div class="row">
+        <div class="col-md-8 offset-md-3" style="width: 50rem; ">
+            <form action="{% url 'detail'  %}"  method="post">
+                <!-- action="/memdetail/"  -->
+                <!--  or we can use this also-->
+                {% csrf_token %}
+                    <div class="card bg-info" style="border-radius: 20px;">
+                        <div class="card-body" style="width: 50rem;">
+                                <div class="form-row">
+                                    <div class="md-4" >
+                                        <label class="form-label ml-1">Member No</label>
+                                        <input type="Text"  class="form-control ml-1"  name="mem_no" autofocus id="memno"  autocomplete="off"  placeholder="Member No" required onclick="memcheck()" oninput="memcheck()"  maxlength="10" size="10">
+                                        <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                                    </div>
+                                    <div class="md-4 ml-4" >
+                                        <label class="form-label">Member Name</label>
+                                        <input type="text" class="form-control" name="mem_name" id="mem_nm"   placeholder="Member Name" onclick="mem_nm_check()"  oninput="mem_nm_check()"  autocomplete="off"  required  maxlength="35" size="35">
+                                        <small style="color: yellow ; font-size: 15px;font-weight: bold" id="name_chk"></small>
+                                    </div>
+                                </div>   
+                                <div class="form-row"> 
+                                    <div class="md-3 ">
+                                        <label class-"form-label">Address</label>
+                                        <input type="text" class="form-control" name="mem_add" id="mem_ad" placeholder="Address"  autocomplete="off" required maxlength="35" size="35">
+                                        <!-- <textarea></textarea> -->
+                                    </div>
+
+                                    <div class="md-3 ">
+                                        <label class-"form-label">Phone No</label>
+                                        <input type="text" class="form-control" name="mem_phone" id="mem_ph" placeholder="Phone No"  autocomplete="off" required maxlength="15" size="15" onclick="memcheck(mem_ph)" oninput="memcheck(mem_ph)">
+                                        <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                                    </div>
+                                    <div class="md-3 ">
+                                        <label class-"form-label">Date Of Birth</label>
+                                        <input type="date" class="form-control" name="mem_dob" id="mem_db"  value={{v_dt|date:"Y-m-d"}}  autocomplete="off" required >
+                                    </div>
+                                </div>
+                                <div class="form-row">   
+                                    <div class="md-3 ">
+                                        <label class-"form-label">Addhar No</label>
+                                        <input type="text" class="form-control" name="mem_addhar" id="mem_adh" placeholder="Addhar No"  autocomplete="off" required maxlength="15" size="15">
+                                        <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                                    </div>
+
+                                    <div class="md-3 ">
+                                        <label class-"form-label">Pan No</label>
+                                        <input type="text" class="form-control" name="mem_pan" id="mem_panno" placeholder="Pan No"  autocomplete="off" required maxlength="15" size="15">
+                                        <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                                    </div>
+                                    <div class="md-3 ">
+                                        <label class-"form-label">Passport </label>
+                                        <input type="text" class="form-control" name="mem_Pass" id="mem_passno" placeholder="Passport No"  autocomplete="off" required maxlength="15" size="15">
+                                        <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                                    </div>
+                                </div>
+                                <div class="form-row"> 
+                                    <div class="md-3 ">
+                                        <label class-"form-label">Bank Name</label>
+                                        <input type="text" class="form-control" name="mem_bank" id="mem_bank" placeholder="Bank Name"  autocomplete="off" required maxlength="40" size="40">
+                                        <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                                    </div>
+                                    <div class="md-3 ">
+                                        <label class-"form-label">Bank Account No</label>
+                                        <input type="text" class="form-control" name="mem_bankaccount" id="mem_acccount" placeholder="Bank Account No"  autocomplete="off" required maxlength="16" size="16">
+                                        <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                                    </div>
+                                </div>  
+                                <div class="form-row"> 
+                                    <div class="md-3 ">
+                                        <label class-"form-label">IFSC</label>
+                                        <input type="text" class="form-control" name="mem_ifsc" id="mem_bnifsc" placeholder="IFSC No"  autocomplete="off" required maxlength="15" size="15">
+                                        <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                                    </div>
+                                    <div class="md-3 ">
+                                        <label class-"form-label">Nominee</label>
+                                        <input type="text" class="form-control" name="mem_nominee" id="mem_nomineename" placeholder="Nominee Name"  autocomplete="off" required maxlength="40" size="40">
+                                        <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                                    </div>
+                                </div>
+                                <div class="form-row"> 
+                                    <div class="md-3 ">
+                                        <label class-"form-label">Nominee Phone No</label>
+                                        <input type="text" class="form-control" name="mem_nomineephone" id="mem_noph" placeholder="Nominee Phone  No"  autocomplete="off" required maxlength="15" size="15">
+                                        <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                                    </div>
+                                    <div class="md-3 ">
+                                        <label class-"form-label">No of children</label>
+                                        <input type="text" class="form-control" name="mem_children" id="mem_child" placeholder="No of children"  autocomplete="off" required maxlength="15" size="15">
+                                        <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                                    </div>
+                                </div>
+                                <div class="form-row"> 
+                                    <div class="md-3 ">
+                                        
+                                        <label class-"form-label">Account Name</label>
+                                        <input type="Text"  class="form-control"  name="acc_name"   id="accnm"  autocomplete="off" value = "{{mem_name}}" placeholder="Account Name" required   maxlength="40" size="40">
+                                        <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                                    </div>
+                                </div>
+                                <div class="form-row"> 
+                                    <div class="md-3 ">
+                                        <label >Account Group</label> <br>
+                                        <select name="group" id="grp_id" class="form-select" onchange="grp_select()" >
+                                            <option  selected > Choose Group </option>
+                                            {% for x in grp_data %}
+                                            <option value="{{x.id}}">{{x.grp_name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="md-3 ">
+                                        <label class-"form-label">Opening Balance</label>
+                                        <input type="number" class="form-control" name="mem_opbal" id="mem_opbal" placeholder="Opening Balance"  autocomplete="off" required maxlength="15" size="15">
+                                        <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                                    </div>
+                                </div>
+
+                            </div>
+                    </div>
+                
+                <div class="container text-center my-1" >
+                    <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" type="submit">Save</button>
+                    <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}" >Exit</a></button>
+                    <button class="btn btn=danger text-white" style ="background-color: white; border-radius: 10px;" ><a href="{% url 'list' %}">Member List</a></button>
+                </div> 
+            </form>
+        </div>       
+    </div>
+</div>
+
+
+
+{% comment %} member updation old form {% endcomment %}
+
+<div class="card bg-info" style="border-radius: 20px;">
+    <div class="card-body" style="width: 50rem;">
+
+            <div class="form-row">
+                <div class="md-4" >
+                    <label class="form-label ml-1">Member No</label>
+                    <input type="Text"  value={{mem_data.member_no}} class="form-control ml-1"  name="mem_no" autofocus id="memno"  autocomplete="off"  placeholder="Member No" required onclick="memcheck()" oninput="memcheck()"  maxlength="10" size="10">
+                    <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                </div>
+                <div class="md-4 ml-4" >
+                    <label class="form-label">Member Name</label>
+                    <input type="text" value={{mem_data.name}}  class="form-control" name="mem_name" id="mem_nm"   placeholder="Member Name" onclick="mem_nm_check()"  oninput="mem_nm_check()"  autocomplete="off"  required  maxlength="35" size="35">
+                    <small style="color: yellow ; font-size: 15px;font-weight: bold" id="name_chk"></small>
+                </div>
+            </div>   
+            <div class="form-row"> 
+                <div class="md-3 ">
+                    <label class-"form-label">Address</label>
+                    <input type="text" value={{mem_data.address}} class="form-control" name="mem_add" id="mem_ad" placeholder="Address"  autocomplete="off" required maxlength="35" size="35">
+                    <!-- <textarea></textarea> -->
+                </div>
+                <div class="md-3 ">
+                    <label class-"form-label">Phone No</label>
+                    <input type="text" value={{mem_data.phone}} class="form-control" name="mem_phone" id="mem_ph" placeholder="Phone No"  autocomplete="off" required maxlength="15" size="15" onclick="memcheck(mem_ph)" oninput="memcheck(mem_ph)">
+                    <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                </div>
+                <div class="md-3 ">
+                    <label class-"form-label">Date Of Birth</label>
+                    <input type="date" value={{mem_data.dob|date:"Y-m-d"}} class="form-control" name="mem_dob" id="mem_db" placeholder="DOB"  autocomplete="off" required >
+                </div>
+            </div>
+            
+            
+            <div class="form-row">   
+                <div class="md-3 ">
+                    <label class-"form-label">Addhar No</label>
+                    <input type="text" value={{mem_data.addhar}} class="form-control" name="mem_addhar" id="mem_adh" placeholder="Addhar No"  autocomplete="off" required maxlength="15" size="15">
+                    <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                </div>
+
+                <div class="md-3 ">
+                    <label class-"form-label">Pan No</label>
+                    <input type="text" value={{mem_data.panno}} class="form-control" name="mem_pan" id="mem_panno" placeholder="Pan No"  autocomplete="off" required maxlength="15" size="15">
+                    <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                </div>
+                <div class="md-3 ">
+                    <label class-"form-label">Passport </label>
+                    <input type="text" value={{mem_data.passport_no}} class="form-control" name="mem_Pass" id="mem_passno" placeholder="Passport No"  autocomplete="off" required maxlength="15" size="15">
+                    <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                </div>
+            </div>
+            
+            
+            
+            <div class="form-row"> 
+                <div class="md-3 ">
+                    <label class-"form-label">Bank Name</label>
+                    <input type="text" value={{mem_data.bank_name}} class="form-control" name="mem_bank" id="mem_bank" placeholder="Bank Name"  autocomplete="off" required maxlength="40" size="40">
+                    <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                </div>
+                <div class="md-3 ">
+                    <label class-"form-label">Bank Account No</label>
+                    <input type="text" value={{mem_data.bank_account}} class="form-control" name="mem_bankaccount" id="mem_acccount" placeholder="Bank Account No"  autocomplete="off" required maxlength="16" size="16">
+                    <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                </div>
+            </div>  
+            <div class="form-row"> 
+                <div class="md-3 ">
+                    <label class-"form-label">IFSC</label>
+                    <input type="text" value={{mem_data.bank_ifsc}} class="form-control" name="mem_ifsc" id="mem_bnifsc" placeholder="IFSC No"  autocomplete="off" required maxlength="15" size="15">
+                    <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                </div>
+                <div class="md-3 ">
+                    <label class-"form-label">Nominee</label>
+                    <input type="text" value={{mem_data.nominee}}  class="form-control" name="mem_nominee" id="mem_nomineename" placeholder="Nominee Name"  autocomplete="off" required maxlength="40" size="40">
+                    <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                </div>
+            </div>
+
+            
+
+            <div class="form-row"> 
+                <div class="md-3 ">
+                    <label class-"form-label">Nominee Phone No</label>
+                    <input type="text" value={{mem_data.nominee_phone}}  class="form-control" name="mem_nomineephone" id="mem_noph" placeholder="Nominee Phone  No"  autocomplete="off" required maxlength="15" size="15">
+                    <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                </div>
+                <div class="md-3 ">
+                    <label class-"form-label">No of children</label>
+                    <input type="text" value={{mem_data.no_of_children}} class="form-control" name="mem_children" id="mem_child" placeholder="No of children"  autocomplete="off" required maxlength="15" size="15">
+                    <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                </div>
+            </div>
+    </div>
+</div>
+
+<div class="container text-center my-1" >
+<button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" type="submit">Save</button>
+<button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}" >Exit</a></button>
+<button class="btn btn=danger text-white" style ="background-color: white; border-radius: 10px;" ><a href="{% url 'list' %}">Member List</a></button>
+</div> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+
+<body>
+    {% include 'base.html' %}
+    <h1 class="text-center my-2">Account Head List</h1>
+     
+    <div class="container" >
+        
+        <div class="row">
+            <div class="col=md-12 offset-md-3">
+                <div class="card">
+                    <div class="card-body"  >
+                        <table border="2" cellspacing="7"  class="table table-striped" >
+                            <button text-align="center"  ><a href="{% url 'main' %}" >Back To Main Maenu</a>
+                            <thead>
+                                <tr>
+                                    <th>Account No</th>
+                                    <th>Head</th>
+                                    <th>Op. Balance</th>
+                                    <th>Group</th>
+                                    <th colspan="2" align="text-center">Operation</th> 
+                                   
+                                </tr>
+                            </thead>
+                            <tbody style="overflow-x:auto;"> 
+                                {% for acc in acc_data %}
+                                <tr>
+                                    <td>{{acc.id}}</td>
+                                    <td>{{acc.acc_name}}</td>
+                                    <td>{{acc.op_bal}}</td>
+                                    <td>{{acc.grp_nm}}</td>
+
+                                    <td><button><a href="{% url 'acc_del' acc.id %}">Delete</a></button></td>
+                                    <td><button><a href="{% url 'accupdate' acc.id %}">Update</a></button></td>  
+                                    
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                         
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+</body> -->

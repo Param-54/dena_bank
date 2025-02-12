@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+ <table border="2" cellspacing="7"  class="table table-striped" >
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>member number</th>
+            <th>Name</th>
+            <th>Address</th>
+        </tr>
+    </thead>
+    <div>
+        <tbody style="overflow-x:auto;">
+                <tr>
+                    <td>
+                    <select name="group" id="grp_id" class="form-select"  >
+                        <option selected >Select Group</option>
+                        <option value="1">Apple</option>
+                        <option value="2">Mango</option>
+                    </select>
+                    </td>
+                    <td><input type="Text"  class="form-control ml-1"  name="mem_no" autofocus id="memno"  autocomplete="off"  placeholder="Member No"   maxlength="10" size="10"></td>
+                </tr>
+                <tr>
+                    <td>
+                    <select name="group" id="grp_id" class="form-select"  >
+                        <option selected >Select Group</option>
+                        <option value="1">Apple</option>
+                        <option value="2">Mango</option>
+                    </select>
+                    </td>
+                    <td><input type="Text"  class="form-control ml-1"  name="mem_no" autofocus id="memno"  autocomplete="off"  placeholder="Member No"   maxlength="10" size="10"></td>
+                </tr>
+                <tr>
+                    <td>
+                    <select name="group" id="grp_id" class="form-select"  >
+                        <option selected >Select Group</option>
+                        <option value="1">Apple</option>
+                        <option value="2">Mango</option>
+                    </select>
+                    </td>
+                    <td><input type="Text"  class="form-control ml-1"  name="mem_no" autofocus id="memno"  autocomplete="off"  placeholder="Member No"   maxlength="10" size="10"></td>
+                </tr>
+        </tbody>
+    </div>
+</table>    
+</body>
+</html>
+
+
+
+
+                                    <!-- <label >Transaction Type  </label>  -->
+                                    <!-- <select name="tr_type" id="tr_id" class="form-select" onchange=vch_add() > -->
+                                        <!-- <option  selected >Transaction Type </option> -->
+                                        <!-- <option  value={{v_trans.trans_type}} selected >{{v_trans.trans_nm}} </option>
+                                        {% for x in trty_data %}
+                                        <option value="{{x.trans_type}}">{{x.vch_type_name}}</option>
+                                        {% endfor %}
+                                    </select> -->
+                                    
+                                    <!-- <a href="{% url 'vchadd' {{x.trans_type}} %}" > check</a> -->

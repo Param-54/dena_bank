@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}   
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/css/f1.css' %}">
+    <title>Account Head</title>
+</head>
+<body>
+    {% include 'base.html' %}
+    <h6 class="text-center my-2">Account Head Update</h6>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card bg-info">
+                    <div class="card-body">
+                        <form action="{% url 'do_accupdate' acc_data.id %} "  method="post">
+                            <!-- "{% url 'accsave'  %}" -->
+                            <!-- action="/memdetail/"  -->
+                            <!--  or we can use this also-->
+                            {% csrf_token %}
+                            <div class="md-3">
+                                <label>Account Head</label>
+                                <input type="Text"  class="form-control"  name="acc_name" autofocus id="accnm"  autocomplete="off"  placeholder="Account Name" required   maxlength="40" size="40" value="{{acc_data.acc_name}}">
+                                <!-- <label id="nm_chk"></label>  -->
+                            </div>
+                            <div>
+                                <label>Opening Balance</label>
+                                <input type="number"  class="form-control"  name="acc_opbal" autofocus id="opbal"  autocomplete="off" placeholder="Opening Balance" required  step="0.01" maxlength="15" size="" value="{{acc_data.op_bal}}">
+                            </div>
+                            <br>
+                            <div class="md-3">
+                                <label >Account Group</label> <br>
+                                
+                                <select name="group" id="grp_id" class="form-select" onchange="grp_select()" >
+                                    <option  value="{{acc_data.grp_id_id}}" selected >{{acc_data.grp_nm}} </option>
+                                    {% for x in grp_data %}
+                                    <option value="{{x.id}}">{{x.grp_name}}</option>
+                                    {% endfor %} 
+                                </select>
+                                <!-- <input type="text" class="form-control" name="mem_name" id="mem_nm" placeholder="Member Name"   required  maxlength="35" size="35"> -->
+                            </div>
+                            <br>
+                            <div class="container text-center my-2">
+                                <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" type="submit">Save</button>
+                                <button class="btn btn-sucess" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}" >Back to Main menu</a></button>
+                            </div> 
+                        </form>    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+    <script type="text/javascript" src="{% static '/js/first.js' %}"></script>
+    <script>
+        
+        function grp_select(){
+            
+            gpid= document.getElementById("grp_id").value;
+            gpname = document.getElementsByName("group").value;
+            // alert(gpid);
+           // alert(gpname);
+            
+        } 
+    </script>
+    
+</html>

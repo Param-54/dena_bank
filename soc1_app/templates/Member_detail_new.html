@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}   
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="{% static '/css/f1.css' %}">
+    <link rel="stylesheet" href="{% static '/css/style.css' %}"> -->
+    <title>Member Detail</title>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="main_div_form">
+            <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
+                    <h4 class="text-center text-danger my-3">New Member Creation</h4>
+            </div>
+            <form action="{% url 'detail'  %}"  method="post">
+                {% csrf_token %}
+                <div style="width: 1200px; height: 725px; margin: 40px auto; background-color:cornflowerblue; border-radius: 20px;">
+                    <div class="row1">
+                        <div class="r1c1">
+                            <label for="memmo">Member No</label>
+                            <input type="Text"  class="form-control ml-1"  name="mem_no" autofocus id="memno"  autocomplete="off"  placeholder="Member No" required onclick="memcheck()" oninput="memcheck()"  maxlength="10" size="10">
+                            <small style="color:yellow ; font-size: 12px;font-weight: normal" id="nm_chk"></small>
+                        </div>
+                        <div class="r1c2">
+                            <label for="mem_nm">Member Name</label>
+                            <input type="text" class="form-control" name="mem_name" id="mem_nm"   placeholder="Member Name" onclick="mem_nm_check()"  oninput="mem_nm_check()"  autocomplete="off"  required  maxlength="35" size="35">
+                            <small style="color: yellow ; font-size: 15px;font-weight: bold" id="name_chk"></small>
+                        </div>
+                    </div>
+
+                    <div class="row2">
+                        <div class="r3c1">
+                            <label for="mem_db">&nbsp;&nbsp;&nbsp;Date Of Birth</label>
+                            <input type="date" class="form-control" name="mem_dob" id="mem_db"  value={{v_dt|date:"Y-m-d"}}  autocomplete="off" required >
+                        </div>
+                        <div class="r3c2">
+                            <label >&nbsp;&nbsp;&nbsp;Sex</label>
+                            <select name="msex" id="sex_id" class="form-control" class="form-select" onchange="grp_select()">
+                                <option  selected >Select Sex </option>
+                                <option value=1>Male</option>
+                                <option value=2>Female</option>
+                            </select>
+                        </div>
+                        <div class="r3c3">
+                            <label >&nbsp;&nbsp;&nbsp;Phone No</label>
+                            <input type="text" class="form-control" name="mem_phone" id="mem_ph" placeholder="Phone No"  autocomplete="off" required maxlength="15" size="15" onclick="memcheck(mem_ph)" oninput="memcheck(mem_ph)">
+                            <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                        </div>
+ 
+                    </div>
+                    <div class="row3">   
+                        <div class="r3c1">
+                            <label >&nbsp;&nbsp;&nbsp;Addhar No</label>
+                            <input type="text" class="form-control" name="mem_addhar" id="mem_adh" placeholder="Addhar No"  autocomplete="off" required maxlength="15" size="15">
+                            <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                        </div>
+                
+                        <div class="r3c2">
+                            <label >&nbsp;&nbsp;&nbsp;Pan No</label>
+                            <input type="text" class="form-control" name="mem_pan" id="mem_panno" placeholder="Pan No"  autocomplete="off" required maxlength="15" size="15">
+                            <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                        </div>
+                        <div class="r3c3">
+                            <label >&nbsp;&nbsp;&nbsp;Passport</label>
+                            <input type="text" class="form-control" name="mem_Pass" id="mem_passno" placeholder="Passport No"  autocomplete="off" required maxlength="15" size="15">
+                            <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                        </div>
+                    </div>
+            
+                    <div class="row4"> 
+                        <div class="r4c1">
+                            <label >&nbsp;&nbsp;&nbsp;Bank Name</label>
+                            <input type="text" class="form-control" name="mem_bank" id="mem_bank" placeholder="Bank Name"  autocomplete="off" required maxlength="40" size="40">
+                            <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                        </div>
+                        <div class="r4c2">
+                            <label >&nbsp;&nbsp;&nbsp;Bank Account No</label>
+                            <input type="text" class="form-control" name="mem_bankaccount" id="mem_acccount" placeholder="Bank Account No"  autocomplete="off" required maxlength="16" size="16">
+                            <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                        </div>
+                        <div class="r4c3">
+                            <label>&nbsp;&nbsp;&nbsp;IFSC</label>
+                            <input type="text" class="form-control" name="mem_ifsc" id="mem_bnifsc" placeholder="IFSC No"  autocomplete="off" required maxlength="15" size="15">
+                            <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                        </div>
+                    </div>
+                    
+                    <div class="row5">
+                        <div class="r5c1">
+                            <label >&nbsp;&nbsp;&nbsp;Nominee</label>
+                            <input type="text" class="form-control" name="mem_nominee" id="mem_nomineename" placeholder="Nominee Name"  autocomplete="off" required maxlength="40" size="40">
+                            <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                        </div> 
+                        
+                        <div class="r5c2">
+                            <label >&nbsp;&nbsp;&nbsp;Nominee Phone No</label>
+                            <input type="text" class="form-control" name="mem_nomineephone" id="mem_noph" placeholder="Nominee Phone  No"  autocomplete="off" required maxlength="15" size="15">
+                            <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                        </div>
+                        <div class="r5c3">
+                            <label >&nbsp;&nbsp;&nbsp;No of children</label>
+                            <input type="text" class="form-control" name="mem_children" id="mem_child" placeholder="No of children"  autocomplete="off" required maxlength="15" size="15">
+                            <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                        </div>
+
+                    </div>
+                    <div class="row31">   
+                        <div style="width: 700px; margin: 40px; margin-top: 0px;">
+                            <label >&nbsp;&nbsp;&nbsp;Address</label>
+                            <input type="text" class="form-control" name="mem_add" id="mem_ad" placeholder="Address"  autocomplete="off" required maxlength="35" size="35">
+                            <!-- <textarea></textarea> -->
+                        </div>
+                    </div>    
+                    <div class="row6"> 
+                        <div class="r6c1">
+                            <label >&nbsp;&nbsp;&nbsp;Account Name</label>
+                            <input type="Text"  class="form-control"  name="acc_name"   id="accnm"  autocomplete="off" value = "{{mem_name}}" placeholder="Account Name" required   maxlength="40" size="40">
+                            <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                        </div>
+                        <div class="r6c2">
+                            <label >&nbsp;&nbsp;&nbsp;Account Group</label> <br>
+                            <select name="group" id="grp_id" class="form-control" class="form-select" onchange="grp_select()" >
+                                <option  selected > Choose Group </option>
+                                {% for x in grp_data %}
+                                <option value="{{x.id}}">{{x.grp_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="r6c3">
+                            <label >Opening Balance</label>
+                            <input type="number" class="form-control" name="mem_opbal" id="mem_opbal" placeholder="Opening Balance"  autocomplete="off" required maxlength="15" size="15">
+                            <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
+                        </div>
+                    </div>
+
+                    <div class="container text-center my-1" >
+                        <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" type="submit">Save</button>
+                        <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}" >Exit</a></button>
+                        <button class="btn btn=danger text-white" style ="background-color: white; border-radius: 10px;" ><a href="{% url 'list' %}">Member List</a></button>
+                    </div> 
+                </div>
+            </form>
+    </div>
+</body>
+
+    <script type="text/javascript" src="{% static '/js/first.js' %}"></script>
+  
+    <script>
+            function mem_ad1(){
+                   let mes="ad saved"
+                    alert(mes);
+            }
+
+            function memcheck()  {
+                var memid_val = document.getElementById("memno").value;
+                // alert(memid_val);
+                if (isNaN(memid_val)) {
+                    document.getElementById("nm_chk").innerHTML = "Only Numeric values";
+                }
+                else if (memid_val.length > 6 ) {
+                    document.getElementById("nm_chk").innerHTML = "Member No not more then 6 charecter";
+                }else{
+                    document.getElementById("nm_chk").innerHTML = "" ;
+                }
+            }
+
+            function dup_check(){
+                var memid_val = document.getElementById("memno").value;
+                alert(memid_val);
+                new_check = member_detail.objects.filter(member_no=memid_val).exists;
+                alert(new_check);
+                if (new_check){
+                    document.getElementById("nm_chk").innerHTML = "Duplicate";   
+                    //messages.success(request, 'Section already exists')
+                    //    return redirect("/section/")
+                }
+            }
+
+            function mem_nm_check() {
+                let memnm_val = document.getElementById("mem_nm").value;
+                //document.getElementsByid("accnm").value = memnm_val;
+                pattern = /[0-9+-@#%^&*$!.=]/;
+                let res = pattern.test(memnm_val);
+                if (res == true){
+                        document.getElementById("name_chk").innerHTML = "Name contain only alpha ";
+                } else {
+                        document.getElementById("name_chk").innerHTML = "";
+                }
+            }
+        </script>
+</html>

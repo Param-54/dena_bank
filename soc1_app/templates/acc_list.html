@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member List</title>
+    <style>
+        table,th,td{
+            height:7px;
+            border: 1px solid black;
+            margin: auto;
+        }
+        table{
+            border-radius: 10px;
+        }
+        tr{
+            background-color: #96D4D4;
+        }
+        th {
+            background-color: aqua;
+        }
+    </style>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="main_div_form">
+            <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
+                <h4 class="text-center text-danger my-3">Account Head List</h4>
+            </div>
+                        <table >
+                            <thead>
+                                <tr align="center">
+                                    <th>Account No</th>
+                                    <th>Head</th>
+                                    <th>Op. Balance</th>
+                                    <th>Group</th>
+                                    <th colspan="2" align="text-center">Action</th> 
+                                    <!-- <button style= "background-color: azure;   margin-left: 1290px; border-radius: 10px; "><a href="{% url 'detail' %}" >Add New</a> -->
+                                    <button style= "margin-left: 1165px; background-color: azure;border-radius:10px;"><a href="{% url 'main' %}" >Main Maenu</a>                                   
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                {% for acc in acc_data %}
+                                <tr>
+                                    <td>{{acc.id}}</td>
+                                    <td>{{acc.acc_name}}</td>
+                                    <td>{{acc.op_bal}}</td>
+                                    <td>{{acc.grp_nm}}</td>
+                                    <td><button style=" width: 75px; background-color: azure;border-radius:10px;"><a href="{% url 'accupdate' acc.id %}">Update</a></button></td>  
+                                    <td><button style="width:75px; background-color: red; border-radius: 10px;"><a href="{% url 'acc_del' acc.id %}">Delete</a></button></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+    </div>    
+</body>
+</html>
+
+
+
+
+
+
+
+

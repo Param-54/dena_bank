@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}   
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/css/f1.css' %}">
+    <title>Account Head</title>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="container mt-6">
+        <div class="alert-success" style="border-radius: 40px;">
+            <h4 class="text-center text-danger my-0">{{trty_data.vch_type_name}} Voucher Entry</h4>
+        </div>
+    </div>
+    <<div class="container text-white  pt-10">
+        <div class="row">
+            <div class="col-md-10 offset-md-1" style="width: 50rem; ">
+                <div class="card bg-info">
+                    <div class="card-body">
+                        <form action="{% url 'vch_edit' v_trans.vch_no %}"  method="post">
+                        <!-- <form action=""  method="post"> -->
+                                {% csrf_token %}
+                            <div class="form-row">
+                                <div class="md-8">
+                                    <div class="form-row"> 
+                                        <div class="md-6">
+                                            <label class-"form-label" class="md-3 ml-8"> Voucher No </label>
+                                            <input type="number" value={{v_trans.vch_no_srno}} name="vch_no" autofocus id="vchno"  autocomplete="off"  placeholder="Voucher No" readonly  maxlength="10" size="10">
+                                        </div>
+                                        <div class="md-3">
+                                            <label class-"form-label" class="md-3 ml-8" >Date Of Voucher</label>
+                                            <input type="date"  name="mem_dob" id="mem_db" placeholder="Date"  value={{v_trans.vch_date|date:"Y-m-d"}} autocomplete="off" required maxlength="10" size="10">
+                                        </div>
+                                    </div>
+                                    <div class="md-0">
+                                        <label class-"form-label" class="md-3 ml-8" >Account Head</label>
+                                        <select name="acc_name" id="accnm" class="form-select"  onchange="grp_select()" >
+                                            <option  value="{{v_trans.vch_acc_id}}" selected >{{v_trans.vch_acc_head}} </option>
+                                            <!-- <option  selected >Account Head </option> -->
+                                            {% for acc_y in acc_data %}
+                                            <option value={{acc_y.id}}>{{acc_y.acc_name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <!-- <button  style ="background-color: white; border-radius: 10px;color: rgb(255, 255, 255);" type="submit"><a href="{% url 'vch_edit' v_trans.vch_no %}">Del</a></button> -->
+                                        <button  style ="background-color: red; border-radius: 10px; height: 30px;font-size: 16px; text-align: center;" name="cn_val"  value = 1  type="submit" >Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr style="height:4px;border-width:0;color:beige; background-color:black">
+
+                            <table border="2" cellspacing="7"  class="table table-striped" >
+                            <!-- <button text-align="center"  ><a href="{% url 'main' %}" >Back To Main Maenu</a> -->
+                            <thead>
+                                <tr>
+                                    <th>Srno</th>
+                                    <th>Head</th>
+                                    <th>Amount</th>
+                                    <th colspan="2" align="text-center">Operation</th> 
+                                   
+                                </tr>
+                            </thead>
+                            <tbody style="overflow-x:auto;"> 
+                                {% for acc in v_trans_detail %}
+                                    {% if acc.vch_no_srno > v_srno_1 %}
+                                    <tr>
+                                        <td>
+                                            <input type="number" value="{{acc.vch_no_srno}}" name="vch_no_2" autofocus id="vchno"  autocomplete="off"  placeholder="Voucher No" readonly  maxlength="10" size="10">
+                                        </td>                                        
+                                        <td>
+                                            <select name="acc_name1" id="accnm" class="form-select" onchange="grp_select()" >
+                                                <option  value="{{acc.vch_acc_id}}" selected >{{acc.vch_acc_head}} </option>
+                                                {% for acc_y in acc_data %}
+                                                <option value={{acc_y.id}}>{{acc_y.acc_name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td><input type="number"  name="acc_opbal" value="{{acc.vch_amt}}" autofocus id="opbal"  autocomplete="off" placeholder="Amount" required  step="0.01" maxlength="15" size="" ></td>
+                                        <td><button  style ="background-color: red; border-radius: 10px; height: 30px;font-size: 16px; text-align: center;" name="cn_val" value = 2  type="submit">Save</button>></td>
+                                        <td><button  style ="background-color: red; border-radius: 10px; height: 30px;font-size: 16px; text-align: center;"  name="cn_val" value= "{{acc.vch_no_srno}}" type="Submit"  >Edit</button>></td>
+                                        <!-- <td><button  style ="background-color: red; border-radius: 10px; height: 30px;font-size: 16px; text-align: center;"  name="cn_val" value=3  {'t1':3,'a1':acc.vch_no_srno}  type ="submit" >Del</button></td>   -->
+                                    </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>              
+                            <div class="container text-center my-2">
+                                <button class="btn btn-primary" style ="background-color: rgb(165, 126, 42); border-radius: 10px;" type="submit">Save</button>
+                                <button class="btn btn-sucess" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}" >Back to Main menu</a></button>
+                            </div> 
+                        </form>    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+    <script type="text/javascript" src="{% static '/js/first.js' %}"></script>
+    <script>
+        
+        function grp_select(){
+            
+            gpid= document.getElementById("tr_id").value;
+            gpname = document.getElementsByName("tr_type").value;
+            
+        } 
+    </script>
+    
+</html>

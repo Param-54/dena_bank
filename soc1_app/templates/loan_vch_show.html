@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member List</title>
+    <style>
+        table,th,td{
+            height:7px;
+            border: 1px solid black;
+            margin: auto;
+        }
+        table{
+            border-radius: 10px;
+        }
+        tr{
+            background-color: #96D4D4;
+        }
+        th {
+            background-color: aqua;
+        }
+    </style>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="main_div_form">
+        <form action="{% url 'loanviewshow'  %}"  method="post">
+        {% csrf_token %}
+           <div style="width: 800px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
+                <h4 class="text-center text-danger my-3"}>Loan Repayment Schedule of [ {{name}} {{loan_ac}} ]</h4>
+                <label name="acc_name" value="{{loac_ac}}"></label>
+            </div>
+                        <table >
+                            <thead>
+                                <tr align="center">
+                                    <th>Loan Repayment Date</th>
+                                    <th>Opening outstanding</th>
+                                    <th>Emi Amount</th>
+                                    <th>Principal Deduction</th>
+                                    <th>Interest</th>
+                                    <!-- <th colspan="2" align="text-center">Action</th>  -->
+                                    <button style= "background-color: azure;   margin-left: 975px; border-radius: 10px;" name="cn_val" value=1 ><a href="{% url 'loanrepview' %}" >View Voucher</a>
+                                    <button style= "margin-left: 2px; background-color: azure;border-radius:10px;"><a href="{% url 'main' %}" >Main Maenu</a>                                   
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                {% for acc in loan_v_trans %}
+                                <tr>
+                                    <td>{{acc.repayment_date}}</td>
+                                    <td>{{acc.openning_loan_amt}}</td>
+                                    <td>{{acc.emi_amt}}</td>
+                                    <td>{{acc.monthly_prinipal_amt_deduction}}</td>
+                                    <td>{{acc.loan_int_amt}}</td>
+                                </tr>
+                                {% endfor %}
+                                                             
+                            </tbody>
+                        </table>
+
+
+                <div style="width:200px;margin:auto;">
+                    {% if tot_pg > 1 %}
+                        ppno=2
+                        <button style= "background-color: azure;   margin-left: 975px; border-radius: 10px;" name="cn_val" value=2 type="submit" >Next</button>
+                    {% endif %}
+                </div>
+        </form>
+
+    </div>    
+</body>
+</html>
+
+
+
+
+
+
+
+

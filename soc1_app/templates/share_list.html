@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member List</title>
+    <style>
+        table,th,td{
+            height:7px;
+            border: 1px solid black;
+            margin: auto;
+        }
+        table{
+            border-radius: 10px;
+        }
+        tr{
+            background-color: #96D4D4;
+        }
+        th {
+            background-color: aqua;
+        }
+    </style>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="main_div_form">
+            <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
+                <h4 class="text-center text-danger my-3">Member Share List</h4>
+            </div>
+                        <table >
+                            <thead>
+                                <tr align="center">
+                                    <th>Member Name</th>
+                                    <th>Date</th>
+                                    <th>No of Share</th>
+                                    <th colspan="2" align="text-center">Action</th> 
+                                    <button style= "background-color: azure;   margin-left: 1026px; border-radius: 10px; "><a href="{% url 'share_add' 9  %}" >Add New</a>
+                                    <button style= "background-color: azure;border-radius:10px;"><a href="{% url 'main' %}" >Main Maenu</a>                                   
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                {% for acc in share_data %}
+                                <tr>
+                                    <td>{{acc.mem_name}}</td>
+                                    <td>{{acc.det_date}}</td>
+                                    <td>{{acc.no_of_share}}</td>
+                                    <td><button style=" width: 75px; background-color: azure;border-radius:10px;"><a href="{% url 'do_shupdata' acc.share_srno %}">Update</a></button></td>  
+                                    <td><button style="width:75px; background-color: red; border-radius: 10px;"><a href="{% url 'share_del' acc.share_srno %}">Delete</a></button></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+    </div>    
+</body>
+</html>

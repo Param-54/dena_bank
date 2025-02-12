@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}   
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/css/f1.css' %}">
+    <title>Share Detail</title>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div style="width: 100%; height: 825px; margin:auto; border: 1px solid black; background-color: blue;">
+        <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
+            <h5 class="text-center text-danger my-3">Members Share Details</h5>
+        </div>
+                <form action="{% url 'share_add' 9 %}"  method="post">
+                    {% csrf_token %} 
+                    <div class="mainint">
+                        <!-- <div class="intr1">
+                            <div class="intr1c1">
+                                <label class-"form-label" class="md-3 ml-8"> Voucher No </label>
+                                <input type="number" class="form-control" value={{sharedetail.share_srno}} name="vch_no" autofocus id="vchno"  autocomplete="off"  placeholder="Voucher No" readonly  maxlength="10" size="10">
+                            </div>
+                        </div> -->
+                        <div class="intr2">
+                            <label class-"form-label"  class="md-3 ml-8" >Date Of Voucher</label>
+                            <input type="date"  class="form-control" name="mem_dob" id="mem_db" placeholder="Date"  value={{det_date|date:"Y-m-d"}} autocomplete="off" required maxlength="10" size="10">
+                        </div>
+                        <div class="intr2">
+                            <label class-"form-label" class="md-3 ml-8" >Member Name</label>
+                            <select name="acc_name" id="accnm" class="form-control" class="form-select"  onchange="grp_select()" >
+                                <option   selected >Select member </option>
+                            {% for memdt in mem_det %}
+                                <option value={{memdt.member_no}}>{{memdt.name}}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <div class="intr2">
+                            <label for="mem_rt">No of shares</label>
+                            <input type="number" class="form-control" name="no_of_share" id="no_of_share"  value={{sharedetail.no_of_share}} placeholder="No of Shares" autocomplete="off"  required  maxlength="4" size="5">
+                            <small style="color: yellow ; font-size: 15px;font-weight: bold" id="name_chk"></small>
+                        </div><br>
+                        <div class="container text-center my-1" >
+                            <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" name="cn_val" value=1 type="submit">Save & Continue</button>
+                            <button class="btn btn-primary" style ="background-color: azure; border-radius: 10px;"><a href="{% url 'sharelist' %}">Share List</a></button>
+                            <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}">Exit</a></button>
+                        </div> 
+                    </div>
+                </form>
+    </div>
+</body>
+
+    <script type="text/javascript" src="{% static '/js/first.js' %}"></script>
+    <script>
+        
+        function grp_select(){
+            
+            gpid= document.getElementById("tr_id").value;
+            gpname = document.getElementsByName("tr_type").value;
+            
+        } 
+    </script>
+    
+</html>

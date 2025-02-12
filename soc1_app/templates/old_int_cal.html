@@ -1,0 +1,72 @@
+{% extends "base.html" %}  
+{% block contet %}
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}   
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/css/f1.css' %}">
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
+    <title>Member Detail</title>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div style="width: 100%; height: 825px; margin:auto; border: 1px solid black; background-color: blue;">
+        <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
+            <h5 class="text-center text-danger my-3">Monthly Interest Calculation of Members</h5>
+        </div>
+            <form action="{% url 'intcal' %}"  method="post">
+                <!-- action="/memdetail/"  -->
+                <!--  or we can use this also-->
+                {% csrf_token %} 
+                <div class="mainint">
+                    <div class="intr1">
+                        <div class="intr1c1">
+                            <label>Account Head</label>
+                            <select name="acc_name" id="accnm" class="form-control" class="form-select"  onchange="grp_select()" >
+                                <option  selected >Select Account</option>
+                                <!-- <option  selected >Account Head </option> -->
+                                {% for acc_y in acc_data %}
+                                <option value={{acc_y.id}}>{{acc_y.acc_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="intr2">
+                        <label for="mem_nm">Month</label>
+                        <input type="number" class="form-control" name="int_month" id="mem_nm"   placeholder="Month [1-12]" min="1" max="12"   autocomplete="off"  required  maxlength="2" size="7">
+                        <small style="color: yellow ; font-size: 15px;font-weight: bold" id="name_chk"></small>
+                    </div>
+                    <div class="intr2">
+                        <label for="mem_yr">Year</label>
+                        <input type="number" class="form-control" name="int_year" id="mem_yr"   placeholder="year" min="2023"   autocomplete="off"  required  maxlength="4" size="7">
+                        <small style="color: yellow ; font-size: 15px;font-weight: bold" id="name_chk"></small>
+                    </div>
+                    <div class="intr2">
+                        <label for="mem_rt">Int Rate</label>
+                        <input type="number" class="form-control" name="int_rate" id="mem_rt"   placeholder="Interest year" min="3.5"   autocomplete="off"  required  maxlength="4" size="5">
+                        <small style="color: yellow ; font-size: 15px;font-weight: bold" id="name_chk"></small>
+                    </div><br>
+                    <div class="container text-center my-1" >
+                        <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" type="submit">Save</button>
+                        <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}" >Exit</a></button>
+                    </div> 
+                </div>
+            </form>
+    </div>
+  
+</body>
+    <script type="text/javascript" src="{% static '/js/first.js' %}"></script>
+    <script>
+        
+        function grp_select(){
+            
+            gpid= document.getElementById("tr_id").value;
+            gpname = document.getElementsByName("tr_type").value;
+            
+        } 
+    </script>
+
+</html>
+{% endblock contet %}
