@@ -196,6 +196,7 @@ def trans_add(request,id):
 def trans_edit(request,vch_no):
     cnt=vch_trans.objects.filter(vch_no=vch_no).count()
     v_cn_val = request.POST['cn_val']
+
     if int(v_cn_val) == 3 :
             v_vch_no_srno_2 = request.POST['vch_no_2']
             
@@ -262,8 +263,7 @@ def trans_edit(request,vch_no):
             if (x.vch_no_srno-(x.vch_no*1000))>1 :
                     amt =x.vch_amt
                     v_amt = v_amt + amt
-                    
-            
+
         trty_data=vch_type.objects.get(trans_type=tr_ty)
         acc_data=account_head.objects.all()
 
@@ -627,7 +627,8 @@ def loan_cal(request):
 #                     print(re_int_rt)
                      for x in range(re_loan_mnth):
 #                        re_int_amt = re_int_amt + round(((re_balance_loan_amt*re_int_rt)/100),2)
-                        re_int_amt = round(((re_balance_loan_amt*re_int_rt)/100),0)
+#                        re_int_amt = round(((re_balance_loan_amt*re_int_rt)/100),0)
+                        re_int_amt = 1400
                         re_balance_loan_amt = re_balance_loan_amt - re_principal_amt
                         re_loan_int_amt = re_loan_int_amt + re_int_amt
  #                       print(re_loan_int_amt)
@@ -699,32 +700,45 @@ def loan_cal_view(request):
 def loan_cal_view_list(request):
     if request.method == 'POST':
         v_loan_ac_no    = request.POST['acc_name']
-        v_cn_val= request.POST.get('cn_val')
-        print(v_cn_val)
-        print(v_loan_ac_no)
+        v_cn_val= request.POST['cn_val']
+        if int(v_cn_val) == 1 :
+            v_pgno = 1    
+        if int(v_cn_val) == 2 :
+            v_pgno = request.POST['pg_no']    
+        if int(v_cn_val) == 3 :
+            v_pgno = request.POST['pg_no']
+        
+#        print(v_cn_val)
 #        print(v_loan_ac_no)
         v_int_data = loan_cal_controll.objects.get(loan_ac_no = v_loan_ac_no)
-       # print(v_int_data)
         v_loan_name = v_int_data.mem_acc_name
-       # print(v_vch_no)
-    else :
-#        
-            print("vipul")
-            v_cn_val=request.POSt['cn_val']
-    print(v_cn_val)
-    v_trans = Paginator(loan_repayment_sch.objects.filter(Loan_no= v_loan_ac_no),20)
+ 
+    v_trans = Paginator(loan_repayment_sch.objects.filter(Loan_no= v_loan_ac_no),22)
 
+    
+    # if int(v_cn_val) == 1 :
+    #          pg_no=1
+    # else :
+    #          pg_no = int(v_pgno)+1
+    
+   
+    total_pg = v_trans.num_pages
 
     if int(v_cn_val) == 1 :
-             pg_no=1
-    else :
-             pg_no = int(v_cn_val)+1
+              pg_no=1
+    if int(v_cn_val) == 3 :
+            v_pgno = request.POST['pg_no']
+            pg_no = int(v_pgno)+1
+            if pg_no > total_pg :
+                pg_no=total_pg
+    if int(v_cn_val) == 2 :
+            v_pgno = request.POST['pg_no']
+            pg_no = int(v_pgno)-1
+            if pg_no == 0:
+                 pg_no=1
 
-    print(pg_no)
     first_page = v_trans.get_page(pg_no)
-    total_pg = v_trans.num_pages
-        
-        
+#    print(pg_no)
     return render(request,'loan_vch_show.html',{'loan_v_trans': first_page,'name':v_loan_name,'loan_ac':v_loan_ac_no,'tot_pg':total_pg,'pgno':pg_no})
 
 #Share Details 

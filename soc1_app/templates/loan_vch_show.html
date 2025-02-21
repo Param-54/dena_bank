@@ -6,8 +6,8 @@
     <title>Member List</title>
     <style>
         table,th,td{
-            height:7px;
-            border: 1px solid black;
+            height:20px;
+            border: 2px solid black;
             margin: auto;
         }
         table{
@@ -19,6 +19,7 @@
         th {
             background-color: aqua;
         }
+        tr:nth-child(even) {background-color: #f2f2f2;}
     </style>
 </head>
 <body>
@@ -26,23 +27,31 @@
     <div class="main_div_form">
         <form action="{% url 'loanviewshow'  %}"  method="post">
         {% csrf_token %}
-           <div style="width: 800px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
-                <h4 class="text-center text-danger my-3"}>Loan Repayment Schedule of [ {{name}} {{loan_ac}} ]</h4>
-                <label name="acc_name" value="{{loac_ac}}"></label>
-            </div>
-                        <table >
-                            <thead>
+               <div style="width: 800px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
+                    <h4 class="text-center text-danger my-3"}>Loan Repayment Schedule of [ {{name}} ]</h4>
+                </div>
+                <div style="width: 400px; height:30px; margin:auto;  background-color: beige;  border-radius: 05px;">
+                    <label for="acc_name" style="margin-left:20px; box-sizing: border-box;">Loan no</label>
+                    <input type="text" readonly name="acc_name"  value="{{loan_ac}}" size="10">
+                    <label for="pg_no" style="margin-left:10px;">Page No</label>
+                    <input type="text" readonly name="pg_no"  value="{{pgno}}" size="3">
+
+                </div>
+                <div >
+                    <button style= "background-color: azure;   margin-left:1055px; border-radius: 10px;" name="cn_val" value=1 ><a href="{% url 'loanrepview' %}" >View Voucher</a>
+                    <button style= "margin-left: 2px; background-color: azure;border-radius:10px;"><a href="{% url 'main' %}" >Main Maenu</a>                                   
+
+                </div>
+                <!-- <div style="width:1200px;margin:auto; height:600px; overflow-x: auto;"> -->
+                    <table>
                                 <tr align="center">
                                     <th>Loan Repayment Date</th>
-                                    <th>Opening outstanding</th>
+                                    <th>Opening outstanding</th> 
                                     <th>Emi Amount</th>
                                     <th>Principal Deduction</th>
                                     <th>Interest</th>
                                     <!-- <th colspan="2" align="text-center">Action</th>  -->
-                                    <button style= "background-color: azure;   margin-left: 975px; border-radius: 10px;" name="cn_val" value=1 ><a href="{% url 'loanrepview' %}" >View Voucher</a>
-                                    <button style= "margin-left: 2px; background-color: azure;border-radius:10px;"><a href="{% url 'main' %}" >Main Maenu</a>                                   
                                 </tr>
-                            </thead>
                             <tbody> 
                                 {% for acc in loan_v_trans %}
                                 <tr>
@@ -53,15 +62,16 @@
                                     <td>{{acc.loan_int_amt}}</td>
                                 </tr>
                                 {% endfor %}
-                                                             
                             </tbody>
-                        </table>
+                    </table>
 
-
-                <div style="width:200px;margin:auto;">
+                <!-- </div> -->
+                <div style="width: 205px;background-color: red;margin:auto; border-radius:10px;">
                     {% if tot_pg > 1 %}
-                        ppno=2
-                        <button style= "background-color: azure;   margin-left: 975px; border-radius: 10px;" name="cn_val" value=2 type="submit" >Next</button>
+                        <div style="width:300px background-color: red; margin:auto; border-radius:10px">
+                            <button style= "background-color: azure;  width: 100px; margin: auto;border-radius: 10px;" name="cn_val" value=2 >Prev</button>
+                            <button style= "background-color: azure;  width: 100px; margin: auto;border-radius: 10px;" name="cn_val" value=3 >Next</button>
+                        </div>
                     {% endif %}
                 </div>
         </form>

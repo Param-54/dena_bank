@@ -14,8 +14,7 @@
         <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
             <h5 class="text-center text-danger my-3">Loan Repayment Schedule View</h5>
         </div>
- 
-                <form action="{% url 'loanviewshow'  %}"  method="post">
+               <form action="{% url 'loanviewshow'  %}"  method="post">
                     {% csrf_token %} 
                     <div class="mainint">
                         <div class="intr1">
@@ -32,7 +31,7 @@
                         </div>
                          <br>
                         <div class="container text-center my-1" >
-                            <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" name="cn_val" value=1 type="submit">View</button>
+                            <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" name="cn_val" value=1 >View</button>
                             <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}" >Exit</a></button>
                         </div> 
                     </div>
