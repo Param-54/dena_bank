@@ -129,3 +129,25 @@ class loan_repayment_sch(models.Model):
     emi_paid = models.IntegerField()   
     mem_acc_id = models.IntegerField()
     mem_acc_name = models.CharField(max_length=40)
+    yrmn = models.IntegerField()
+
+class cd_cal_controll(models.Model):
+    yrmn    = models.IntegerField(primary_key=True)
+    tr_type  = models.IntegerField()
+    vch_no   = models.BigIntegerField()
+
+class cd_mem_list(models.Model):
+    mem_yrmn = models.BigIntegerField(primary_key=True)
+    yrnm  = models.IntegerField()
+    mem_no = models.BigIntegerField()
+    mem_name = models.CharField(max_length=40) 
+    cd_amt = models.BigIntegerField()
+    acc_id = models.BigIntegerField()
+    loan_acc_id = models.BigIntegerField()
+    emi_pri = models.IntegerField()
+    emi_int= models.IntegerField()
+    vch_no = models.BigIntegerField()
+    vch_no_srno = models.BigIntegerField()
+
+
+ 

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member List</title>
+    <style>
+        table,th,td{
+            height:7px;
+            border: 1px solid black;
+            margin: auto;
+        }
+        table{
+            border-radius: 10px;
+        }
+        tr{
+            background-color: #96D4D4;
+        }
+        th {
+            background-color: aqua;
+        }
+    </style>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="main_div_form">
+            <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
+                <h4 class="text-center text-danger my-3">Member CD Detail for [ {{yr}} ]</h4>
+            </div>
+            <form  method='get'>
+                {% comment %} {% url 'cd_listupdate' acc.mem_yrmn %} {% endcomment %}
+                {% csrf_token %} 
+                        <table >
+                            <thead>
+                                <tr align="center">
+                                    <th>Member No</th>
+                                    <th>Member Name</th>
+                                    <th>CD Amount</th>
+                                    <th>Loan Emi Principal amount</th>
+                                    <th>Loan Emi Interest amount</th>
+                                    <th colspan="2" align="text-center">Action</th> 
+                                    {% comment %} <button style= "background-color: azure;   margin-left: 1026px; border-radius: 10px; "><a href="{% url 'share_add' 9  %}" >Add New</a> {% endcomment %}
+                                    <button style= "background-color: azure;margin-left: 1026px; border-radius:10px;"><a href="{% url 'main' %}" >Main Maenu</a>                                   
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                {% for acc in cdlist_data %}
+                                <tr>
+                                    <td>{{acc.mem_no}}</td>
+                                    <td>{{acc.mem_name}}</td>
+                                    <td>{{acc.cd_amt}}</td>
+                                    <td>{{acc.emi_pri}}</td>
+                                    <td>{{acc.emi_int}}</td>
+
+                                    {% comment %} <td><input type="number"  name="acc_opbal" value="{{acc.cd_amt}}" autofocus id="opbal"  autocomplete="off" placeholder="Amount" required  step="0.01" maxlength="15" size="" ></td> {% endcomment %}
+                                    <td><button style=" width: 75px; background-color: azure;border-radius:10px;"><a href="{% url 'cd_listupdate' acc.mem_yrmn %}">Update</a></button></td>   
+                                    {% comment %} <td><button  style ="background-color: red; border-radius: 10px; height: 30px;font-size: 16px; text-align: center;" name="cn_val" value = {{acc.yrnm}}  type="submit">Save</button></td>                                     {% endcomment %}
+                                    {% comment %} <td><button style=" width: 75px; background-color: azure;border-radius:10px;"><a href="#">Edit</a></button></td>   {% endcomment %}
+                                    <td><button style="width:75px; background-color: red; border-radius: 10px;"><a href="#">Delete</a></button></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+            </form>            
+    </div>    
+</body>
+</html>

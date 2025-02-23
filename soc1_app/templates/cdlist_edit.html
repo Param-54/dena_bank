@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}   
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/css/f1.css' %}">
+    <title>Share Detail</title>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div style="width: 100%; height: 825px; margin:auto; border: 1px solid black; background-color: blue;">
+        <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
+            <h5 class="text-center text-danger my-3">Members </h5>
+        </div>
+                <form action="{% url 'cd_update'  cdlist_data.mem_yrmn %}"  method="post">
+                    {% comment %}  {% endcomment %}
+                    <!-- {% url 'share_add' 9 %} -->
+                    {% csrf_token %} 
+    
+                    <div class="mainint">
+                        <div class="intr1">
+                            <div class="intr1c1">
+                                <label class-"form-label" class="md-3 ml-8"> Member No </label>
+                                <input type="number" class="form-control" value={{cdlist_data.mem_no}} name="cd_mem_no" autofocus id="cd_mem_no"  autocomplete="off"  placeholder="Voucher No" readonly  maxlength="10" size="10">
+                            </div>
+                        </div> 
+                        <div class="intr2">
+                            <label class-"form-label"  class="md-3 ml-8" >Member Name</label>
+                            <input type="text"  class="form-control" name="cd_mem_name" id="cd_mem_name" placeholder="Member Name"  value={{cdlist_data.mem_name}} autocomplete="off" readonly maxlength="10" size="10">
+                        </div>
+                        
+                        <div class="intr2">
+                            <label class-"form-label"  class="md-3 ml-8" >Cd Amount</label>
+                            <input type="number"  class="form-control" name="cd_mem_amt" id="cd_mem_amt" placeholder="Cd Amount"  value={{cdlist_data.cd_amt}} autocomplete="off" required maxlength="10" size="10">
+                        </div>
+                        {% if '{{cdlist_data.loan_acc_id}}' != null  %}
+                        <div class="intr2">
+                            <label class-"form-label"  class="md-3 ml-8" >Emi Principal Amount</label>
+                            <input type="number"  class="form-control" name="cd_emi_pri" id="cd_emi_pri" placeholder="Emi Amount"  value={{cdlist_data.emi_pri}} autocomplete="off" required maxlength="10" size="10">
+                        </div>
+
+                        <div class="intr2">
+                            <label class-"form-label"  class="md-3 ml-8" >Emi Interest Amount</label>
+                            <input type="number"  class="form-control" name="cd_emi_int" id="cd_emi_int" placeholder="Emi Interest Amount"  value={{cdlist_data.emi_int}} autocomplete="off" required maxlength="10" size="10">
+                        </div>
+                        {%endif%}
+
+                        <br>
+                        <div class="container text-center my-1" >
+                            <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" name="cn_val" value={{cdlist_data.yrnm}} type="submit">Update</button>
+                            <!-- <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" name="cn_val" value=2 type="submit">Save</button> -->
+                            <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}" >Main Menu</a></button>
+                        </div> 
+                    </div>
+                </form>
+    </div>
+</body>
+
+    <script type="text/javascript" src="{% static '/js/first.js' %}"></script>
+    <script>
+        
+        function grp_select(){
+            
+            gpid= document.getElementById("tr_id").value;
+            gpname = document.getElementsByName("tr_type").value;
+            
+        } 
+    </script>
+    
+</html>

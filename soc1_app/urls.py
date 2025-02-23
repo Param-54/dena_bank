@@ -44,4 +44,10 @@ urlpatterns = [
    path('doshare_update/<int:share_srno>/',views.doshare_update, name="do_shareupdate"), 
    path('share_del/<int:share_srno>/',views.share_delete, name="share_del"),
 
+   path('cdlistview/', views.cd_list_view, name="cdlistview"),
+   path('cdlist/', views.cd_cal, name="cdlist"),
+   path('cd_listupdate/<int:mem_yrmn>/',views.cd_listupdate, name="cd_listupdate"),
+   path('cd_update/<int:mem_yrmn>/',views.cd_detupdate, name="cd_update"),
+   
+
 ]

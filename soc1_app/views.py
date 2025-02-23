@@ -2,7 +2,7 @@ from xml.dom.minidom import Document
 from django.shortcuts import render,redirect
 from django.shortcuts import HttpResponse
 from django.contrib import messages
-from soc1_app.models import member_detail,acc_group,account_head,vch_type,vch_trans,vch_control,vch_control_srno,mem_share_detail,int_cal_controll,div_cal_controll,loan_cal_controll,loan_repayment_sch
+from soc1_app.models import member_detail,acc_group,account_head,vch_type,vch_trans,vch_control,vch_control_srno,mem_share_detail,int_cal_controll,div_cal_controll,loan_cal_controll,loan_repayment_sch,cd_cal_controll,cd_mem_list
 from datetime import date
 import decimal
 from django.core.paginator import Paginator
@@ -124,10 +124,6 @@ def account_save(request):
           v_grp_id = request.POST['group']   
           v_grp_name = acc_group.objects.get(id=v_grp_id).grp_name
 
-    #      mem_data =member_detail.objects.get(pk=member_no)
-    #      v_grp_name = v_grp.grp_name
-    #      print(v_grp_name)   
-    #     v_mem_add = request.POST['mem_add']
      
           mymem = account_head(acc_name = v_acc_name, grp_id_id = v_grp_id , op_bal = v_opbal, grp_nm = v_grp_name)
           mymem.save()
@@ -575,7 +571,8 @@ def loan_cal(request):
             v_int_rate     = request.POST['int_rate']
             loan_date      = request.POST['loan_stdt']
             v_acc_name     = request.POST['acc_name']
-            v_grp_id       = request.POST['group']   
+            v_grp_id       = request.POST['group'] 
+
 #            print(v_mem_no)
             v_mem_name  = member_detail.objects.get(member_no=v_mem_no).name
 #            print(v_mem_name)
@@ -610,8 +607,11 @@ def loan_cal(request):
                      loan_det = loan_cal_controll.objects.get(loan_ac_no = v_no)
                      re_loan_mnth = int(loan_det.loan_mnth)
                      re_loan_ac_no = loan_det.loan_ac_no
+
                      m_month = int(loan_det.st_date.strftime("%m"))
                      m_year = int(loan_det.st_date.strftime("%Y"))
+                     m_day = int(loan_det.st_date.strftime("%d"))
+                    
                      re_st_date = loan_det.st_date
                      re_mem_no = loan_det.mem_no
                      re_mem_name = loan_det.mem_name
@@ -638,13 +638,19 @@ def loan_cal(request):
                         re_emi_amt = re_principal_amt + re_int_amt
 #                     for x in range(re_loan_mnth):
                         re_loan_ac_no_srno = ((re_loan_ac_no*1000)+(x+1))
-                        if m_month >= 12 :
+  
+                        if m_month >= 12 and m_day>=20:
                              m_month=1
                              m_year= m_year + 1 
                         else :
-                             m_month = m_month + 1
+                            if m_day<=15:
+                              m_day=20
+                            else:
+                              m_month = m_month + 1
                     
                         re_pay_date = date(m_year, m_month, 5)
+
+                        m_yrmn=int(m_year)*100+int(m_month)
 
                         if x > 0 :
                             re_openning_loan_amt = re_openning_loan_amt - re_principal_amt
@@ -653,7 +659,7 @@ def loan_cal(request):
                                                           st_date = re_st_date, tr_type = 8, mem_no = re_mem_no,mem_name = re_mem_name, 
                                                           openning_loan_amt = re_openning_loan_amt,emi_amt = re_emi_amt, loan_int_amt = re_int_amt, 
                                                           monthly_prinipal_amt_deduction = re_principal_amt,loan_mnth = re_loan_mnth, int_rt = re_int_rt, emi_paid = 1 ,
-                                                            mem_acc_id = re_mem_acc_id,mem_acc_name = re_mem_acc_name)
+                                                            mem_acc_id = re_mem_acc_id,mem_acc_name = re_mem_acc_name, yrmn = m_yrmn)
 #                        loan_int_amt = re_loan_int_amt,
 #                    loan_repayment_sch.objects.create(loan_ac_no_srno = re_loan_ac_no_srno,Loan_no = re_loan_ac_no,repayment_date = re_pay_date)               
             else :
@@ -817,7 +823,89 @@ def share_delete(request,share_srno):
     share_det = mem_share_detail.objects.all()
     return render(request,'share_list.html',{'share_data':share_det})
 
-def mem_month_contibution(request):
-    
+def cd_list_view(request):
     mem_det   = member_detail.objects.all()
+    return render(request,'Member_cdlist.html',{'mem_det':mem_det})
 
+
+def cd_cal(request):
+        if request.method == 'POST':
+            v_int_month = request.POST['int_month']
+            v_int_year = request.POST['int_year']
+            m_yrmn=int(v_int_year)*100+int(v_int_month)
+            rec_cheK=cd_cal_controll.objects.filter(yrmn=m_yrmn).exists()
+            if not rec_cheK :
+                    days=30
+                    leap = 0
+                    if int(v_int_year) % 400 == 0:
+                        leap = 1
+                    elif int(v_int_year) % 100 == 0:
+                        leap = 0
+                    elif int(v_int_year) % 4 == 0:
+                        leap = 1
+                    if int(v_int_month) == 2:
+                        days = 28 + leap
+                    list = [1,3,5,7,8,10,12]
+                    if v_int_month in list:
+                        days = 31
+                    
+                    v_dt = date(int(v_int_year), int(v_int_month), days)
+                    cd_cal_controll.objects.create(yrmn=m_yrmn,tr_type = 2)
+                    mem_det = member_detail.objects.all()
+
+                    vch_amt_d=0
+                    for mem in mem_det :
+                        mem_acc_id=mem.acc_id
+                        if mem_acc_id != None :
+     #                       print(mem_acc_id)
+     #                       cd_mem_list
+                            cd_yrmn= m_yrmn*1000000+int(mem.member_no) 
+                            m_loan_acc_id = 0
+                            m_emi_pri = 0
+                            m_emi_int= 0
+                            loan_det_check = loan_repayment_sch.objects.filter(yrmn=m_yrmn , mem_no = mem.member_no).exists() 
+     #                       print(loan_det_check)
+                            if loan_det_check :
+                               loan_det_sch = loan_repayment_sch.objects.get(yrmn=m_yrmn,mem_no = mem.member_no)
+     #                           print(loan_det_sch)
+                               m_loan_acc_id = loan_det_sch.mem_acc_id
+                               m_emi_pri = loan_det_sch.monthly_prinipal_amt_deduction
+                               m_emi_int= loan_det_sch.loan_int_amt
+                            
+                            cd_mem_list(mem_yrmn=cd_yrmn,yrnm = m_yrmn ,mem_no =mem.member_no,mem_name = mem.name, cd_amt = 1000, acc_id = mem_acc_id,loan_acc_id =m_loan_acc_id,
+                                        emi_pri= m_emi_pri, emi_int = m_emi_int).save()
+    #                        cd_mem_list.save()
+
+        cdlist_data=cd_mem_list.objects.filter(yrnm = m_yrmn)
+        return render(request,'cdlist_show.html',{'cdlist_data':cdlist_data,'yr':m_yrmn})
+
+def cd_listupdate(request,mem_yrmn):
+    m_mem_yrmn =  mem_yrmn
+#    m_amt = request.GET['acc_opbal']
+#    print(m_yrmn)
+#    print(m_amt)
+    cdlist_data=cd_mem_list.objects.get(mem_yrmn = m_mem_yrmn)
+#    print(cdlist_data)
+    return render(request,'cdlist_edit.html',{'cdlist_data':cdlist_data,'yr':m_mem_yrmn})
+
+def cd_detupdate(request,mem_yrmn):
+    m_mem_yrmn=mem_yrmn
+    if request.method == 'POST':
+        m_cd_mem_no = request.POST['cd_mem_no']
+        m_cd_mem_name = request.POST['cd_mem_name']
+        m_cd_mem_amt = request.POST['cd_mem_amt']
+        m_cd_emi_pri = request.POST['cd_emi_pri']
+        m_cd_emi_int = request.POST['cd_emi_int']
+        m_yrmn = request.POST['cn_val']
+        cdlist_data=cd_mem_list.objects.get(mem_yrmn = m_mem_yrmn)
+        cdlist_data.mem_no=m_cd_mem_no
+        cdlist_data.mem_name=m_cd_mem_name
+        cdlist_data.mem_amt = m_cd_mem_amt
+        cdlist_data.emi_pri = m_cd_emi_pri
+        cdlist_data.emi_int = m_cd_emi_int
+        cdlist_data.save()
+
+    cdlist_data=cd_mem_list.objects.filter(yrnm = m_yrmn)
+    return render(request,'cdlist_show.html',{'cdlist_data':cdlist_data,'yr':m_yrmn})
+
+         
