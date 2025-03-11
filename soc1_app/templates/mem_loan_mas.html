@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}   
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/css/f1.css' %}">
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
+    <title>Member Detail</title>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div style="width: 100%; height: 825px; margin:auto; border: 1px solid black; background-color: blue;">
+        <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
+            <h5 class="text-center text-danger my-3">Members Loan  Master</h5>
+        </div>
+               <form action="{% url 'mem_loan_view' %}"  method="post">
+                {% csrf_token %} 
+                    <div class="mainint">
+                        <div class="intr1">
+                            <div class="intr1c1">
+                                <label class-"form-label" class="md-3 ml-8" >Member Name</label>
+                                <select name="mem_name" id="memnm" class="form-control" class="form-select"  onchange="grp_select()" >
+                                    {% comment %} <option  value={{mem_det.mem_no}} selected >{{mem_det.mem_name}} </option> {% endcomment %}
+                                    {% for memdt in mem_det %}
+                                        <option value={{memdt.member_no}} >{{memdt.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                       {% comment %} <div class="intr1" > {% endcomment %}
+                        <div class="container text-center my-1" >
+                            <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" type="submit">Member Loan Master List</button>
+                            <button class="btn btn-primary" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}" >Exit</a></button>
+                            <button class="btn btn-primary" style ="background-color: red; color: blue; border-radius: 10px;" ><a href="{% url 'mem_loan_ad' %}" >ADD</a></button>
+
+                        </div>
+ 
+                    </div> 
+                        {% if msg  %}
+                            <div class="alert alert-danger" style="width:800px;margin:auto;text-align:center; height:50px; background-color:red;font-size:15px;font-weight:bold;" role="alert">
+                                {{msg}}
+                            </div>
+                        {% endif %}
+
+
+                </form>
+    </div>           
+</body>
+    <script type="text/javascript" src="{% static '/js/first.js' %}"></script>
+    <script>
+        function grp_select(){
+            gpid= document.getElementById("tr_id").value;
+            gpname = document.getElementsByName("tr_type").value;
+        } 
+    </script>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}   
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/css/f1.css' %}">
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
+    <title>Member Detail</title>
+    <style>
+        table,th,td{
+            height:20px;
+            border: 2px solid black;
+            margin: auto;
+        }
+        table{
+            border-radius: 10px;
+        }
+        tr{
+            background-color: #96D4D4;
+        }
+        th {
+            background-color: aqua;
+        }
+        tr:nth-child(even) {background-color: #f2f2f2;}
+    </style>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div style="width: 100%; height: 825px; margin:auto; border: 1px solid black; background-color: blue;">
+        <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
+            <h5 class="text-center text-danger my-3">Members Loan Master Info</h5>
+        </div>
+               <form action=""  method="post">
+                {% csrf_token %} 
+                    <div class="mainint">
+                        <div class="intr1">
+                            <div class="intr1c1">
+                        
+                                <label class-"form-label" class="md-3 ml-8" >Member Name</label>
+                                <input type="Text" value="{{nm}}" class="form-control ml-1"  name="mem_no" autofocus id="memno"  autocomplete="off"  placeholder="Member Name" readonly maxlength="40" size="40">
+                            </div>
+                        </div>
+                        <br>
+
+                        <div style="width:600px;margin:auto; height:200px; overflow-x: auto;"> 
+                            <table >
+                                <thead>
+                                    <tr align="center">
+                                        <th>Member No</th>
+                                        <th>Account Name</th>
+                                        <th>Loan Amount</th>
+                                        <th>Outstanding Amount</th>
+                                        {% comment %} <th colspan="2" align="text-center">Action</th>  {% endcomment %}
+                                        {% comment %} <button style= "background-color: azure;   margin-left: 1026px; border-radius: 10px; "><a href="{% url 'share_add' 9  %}" >Add New</a> {% endcomment %}
+                                    </tr>
+                                </thead>
+                                <tbody> 
+                                    {% for acc in loan_mas_data %}
+                                    <tr>
+                                        <td>{{acc.loan_mem_no}}</td>
+                                        <td>{{acc.loan_acc_nm}}</td>
+                                        <td>{{acc.disb_amt}}</td>
+                                        <td>{{acc.out_amt}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>       
+    
+                        
+                        <div class="container text-center my-1" >
+                            {% comment %} <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" type="submit">Member Loan Master List</button> {% endcomment %}
+                            <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}" >Exit</a></button>
+                        </div> 
+                        {% if msg  %}
+                            <div class="alert alert-danger" style="text-align:center; background:red;" role="alert">
+                                {{msg}}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                </form>
+    </div>           
+</body>
+    <script type="text/javascript" src="{% static '/js/first.js' %}"></script>
+    <script>
+        function grp_select(){
+            gpid= document.getElementById("tr_id").value;
+            gpname = document.getElementsByName("tr_type").value;
+        } 
+    </script>
+</html>

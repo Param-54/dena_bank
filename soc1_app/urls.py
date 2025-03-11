@@ -48,6 +48,19 @@ urlpatterns = [
    path('cdlist/', views.cd_cal, name="cdlist"),
    path('cd_listupdate/<int:mem_yrmn>/',views.cd_listupdate, name="cd_listupdate"),
    path('cd_update/<int:mem_yrmn>/',views.cd_detupdate, name="cd_update"),
+   path('cdvchpost/', views.cd_vch_post, name="cdvchpost"),
+   path('cdvchcal/', views.cd_vch_cal, name="cdvchcal"),
+
+
+   path('mem_loan_master/', views.mem_loan_master, name="mem_loan_master"),
+   path('mem_loan_view/', views.mem_loan_view, name="mem_loan_view"),
+   path('mem_loan_ad/', views.mem_loan_add, name="mem_loan_ad"),
+   path('mem_loan_sv/', views.mem_loan_mas_sv, name="mem_loan_sv"),
+   
+   path('daybook_view/', views.daybook_view, name="daybook_view"),
+   path('daybook_show/', views.daybook_list, name="daybook_show"),
+   
+   path('vch_tr_edit/<int:vch_no>/', views.vch_trans_edit, name="vch_tr_edit"),
    
 
 ]

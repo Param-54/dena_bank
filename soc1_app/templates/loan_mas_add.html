@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}   
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/css/f1.css' %}">
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
+    <title>Member Detail</title>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div style="width: 100%; height: 825px; margin:auto; border: 1px solid black; background-color: blue;">
+        <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
+            <h5 class="text-center text-danger my-3">Members Loan  Master Creation</h5>
+        </div>
+               <form action="{% url 'mem_loan_sv' %}"  method="post">
+                {% csrf_token %} 
+                    <div class="mainint">
+                        <div class="intr1">
+                            <div class="intr1c1">
+                                <label class-"form-label" class="md-3 ml-8" >Member Name</label>
+                                <select name="mem_name" id="memnm" class="form-control" class="form-select"  onchange="grp_select()" >
+                                    <option  value={{mem_det.mem_no}} selected >{{mem_det.mem_name}} </option>
+                                    {% for memdt in mem_det %}
+                                        <option value={{memdt.member_no}} >{{memdt.name}}</option>
+                                    {% endfor %}
+                                </select>
+
+                                
+                                {% comment %} <input type="Text" value="{{mem_data.name}}" class="form-control ml-1"  name="mem_no" autofocus id="memno"  autocomplete="off"  placeholder="Member No" readonly maxlength="40" size="40"> {% endcomment %}
+                            </div>
+                        </div>
+                        <div class="intr2">
+                                <label >Loan Account Name</label>
+                                <input type="Text"  class="form-control"  name="acc_name"   id="accnm"  autocomplete="off" value = "{{mem_name}}" placeholder="Account Name" required   maxlength="40" size="40">
+                        </div>
+
+                        <div class="intr2">
+                            <label >Account Group</label> <br>
+                            <select name="group" id="grp_id" class="form-control" class="form-select" onchange="grp_select()" >
+                                    <option  selected > Choose Group </option>
+                                    {% for x in grp_data %}
+                                    <option value="{{x.id}}">{{x.grp_name}}</option>
+                                    {% endfor %}
+                            </select>
+                    </div>
+                    <br></br>
+                    <div class="container text-center my-1" >
+                            <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" type="submit">Save</button>
+                            <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}" >Exit</a></button>
+                    </div> 
+                        {% comment %} {% if msg  %}
+                            <div class="alert alert-danger" style="text-align:center; background:red;" role="alert">
+                                {{msg}}
+                            </div>
+                        {% endif %} {% endcomment %}
+
+                    </div>
+
+                </form>
+    </div>           
+</body>
+    <script type="text/javascript" src="{% static '/js/first.js' %}"></script>
+    <script>
+        function grp_select(){
+            gpid= document.getElementById("tr_id").value;
+            gpname = document.getElementsByName("tr_type").value;
+        } 
+    </script>
+</html>

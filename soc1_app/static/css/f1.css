@@ -235,6 +235,7 @@ P {
     border-radius: 20px;
 }
 
+
 .intr1{
     width:300px;
     height: 60px;
@@ -250,4 +251,12 @@ P {
     width:300px;
     height: 60px;
     margin: 10px auto;
+}
+
+.mainintnew{
+    width: 400px;
+    height: 600px;
+    margin: 20px auto;
+    background-color:cornflowerblue;
+    border-radius: 20px;
 }

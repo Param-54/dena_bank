@@ -2,7 +2,7 @@ from xml.dom.minidom import Document
 from django.shortcuts import render,redirect
 from django.shortcuts import HttpResponse
 from django.contrib import messages
-from soc1_app.models import member_detail,acc_group,account_head,vch_type,vch_trans,vch_control,vch_control_srno,mem_share_detail,int_cal_controll,div_cal_controll,loan_cal_controll,loan_repayment_sch,cd_cal_controll,cd_mem_list
+from soc1_app.models import member_detail,acc_group,account_head,vch_type,vch_trans,vch_control,vch_control_srno,mem_share_detail,int_cal_controll,div_cal_controll,loan_cal_controll,loan_repayment_sch,cd_cal_controll,cd_mem_list,loan_master
 from datetime import date
 import decimal
 from django.core.paginator import Paginator
@@ -20,8 +20,15 @@ def mem_detail(request):
             v_opbal = request.POST['mem_opbal']
             v_grp_id = request.POST['group']   
             v_grp_name = acc_group.objects.get(id=v_grp_id).grp_name
-            mymem = account_head(acc_name = v_acc_name, grp_id_id = v_grp_id , op_bal = v_opbal, grp_nm = v_grp_name)
-            mymem.save()
+            
+            acc_check =  account_head.objects.filter(acc_name=v_acc_name).exists()
+#            print(acc_check)
+            if not acc_check :
+#                print("acc vipul")
+                mymem = account_head(acc_name = v_acc_name, grp_id_id = v_grp_id , op_bal = v_opbal, grp_nm = v_grp_name)
+                mymem.save()
+
+
             v_acc_id=account_head.objects.get(acc_name=v_acc_name).id
 
             v_mem_no = request.POST['mem_no']
@@ -123,10 +130,11 @@ def account_save(request):
           v_opbal = request.POST['acc_opbal']
           v_grp_id = request.POST['group']   
           v_grp_name = acc_group.objects.get(id=v_grp_id).grp_name
-
-     
-          mymem = account_head(acc_name = v_acc_name, grp_id_id = v_grp_id , op_bal = v_opbal, grp_nm = v_grp_name)
-          mymem.save()
+          acc_check =  account_head.objects.filter(acc_name=v_acc_name).exists()
+#            print(acc_check)
+          if not acc_check :
+              mymem = account_head(acc_name = v_acc_name, grp_id_id = v_grp_id , op_bal = v_opbal, grp_nm = v_grp_name)
+              mymem.save()
     
     grp_data=acc_group.objects.all()
     return render(request,'acc_detail.html',{'grp_data':grp_data})
@@ -183,7 +191,7 @@ def trans_add(request,id):
     acc_data=account_head.objects.all()
     dt=date.today()  
 
-    vch_trans(trans_type = id, vch_no = v_no, vch_no_srno = v_srno_1, vch_date = dt).save()
+    vch_trans(trans_type = id, vch_no = v_no, vch_no_srno = v_srno_1, vch_date = dt,srno = v_sr).save()
     v_trans=vch_trans.objects.get(vch_no_srno=v_srno_1)
     v_trans_detail=vch_trans.objects.filter(vch_no = v_no)
     return render(request,'transaction_entry.html',{'trty_data':trty_data,'acc_data':acc_data,'v_trans':v_trans,'v_trans_detail':v_trans_detail,'sv_ty':1})
@@ -226,8 +234,14 @@ def trans_edit(request,vch_no):
         v_trans.vch_acc_head= ac_name
 
         if (tr_ty == 1 and cnt == 1) :
-                v_trans.vch_dc="D"
-        v_trans.save()
+            v_trans.vch_dc="D"
+            v_trans.save()
+        if (tr_ty == 2 and cnt == 1) :
+            v_trans.vch_dc="C"
+            v_trans.save()
+        if (tr_ty == 3 and cnt == 1) :
+            v_trans.vch_dc="C"
+            v_trans.save()
 
         if cnt>1 :
                 v_vch_no_srno_2 = request.POST['vch_no_2']
@@ -243,7 +257,13 @@ def trans_edit(request,vch_no):
                 v_trans.vch_amt = v_acc_opbal
                 if tr_ty == 1  :
                     v_trans.vch_dc="C"
-                v_trans.save()
+                    v_trans.save()
+                if tr_ty == 2  :
+                    v_trans.vch_dc="D"
+                    v_trans.save()
+                if tr_ty == 3  :
+                    v_trans.vch_dc="D"
+                    v_trans.save()
 
         else :
                 pass
@@ -278,7 +298,7 @@ def trans_edit(request,vch_no):
                 v_vch_control_srno.stsr_no=v_sr
                 v_vch_control_srno.save()
                 v_srno_2 = (v_vchno*1000)+v_sr
-                vch_trans(trans_type = tr_ty, vch_no = v_vchno, vch_no_srno = v_srno_2, vch_date = dt).save()
+                vch_trans(trans_type = tr_ty, vch_no = v_vchno, vch_no_srno = v_srno_2, vch_date = dt,srno = v_sr).save()
                 
         v_trans_detail=vch_trans.objects.filter(vch_no = v_vchno)
 
@@ -286,18 +306,18 @@ def trans_edit(request,vch_no):
 
 
 def trans_edit1(request,vch_no):
-    print("edit1")
-    print(vch_no)
+#    print("edit1")
+#    print(vch_no)
     v_trans_detail=vch_trans.objects.get(vch_no_srno=vch_no)
 
-    print(v_trans_detail)
+#    print(v_trans_detail)
 
     v_srno_1 = (v_trans_detail.vch_no*1000)+1
     v_trans=vch_trans.objects.get(vch_no_srno=v_srno_1)
     tr_ty=v_trans.trans_type
     trty_data=vch_type.objects.get(trans_type=tr_ty)
     acc_data=account_head.objects.all()
-    print(vch_no)
+#    print(vch_no)
 
     return render(request,'transaction_entry.html',{'trty_data':trty_data,'acc_data':acc_data,'v_trans':v_trans,'v_trans_detail':v_trans_detail})
 
@@ -413,9 +433,14 @@ def int_cal(request):
                         leap = 1
                     if int(v_int_month) == 2:
                         days = 28 + leap
-                    list = [1,3,5,7,8,10,12]
-                    if v_int_month in list:
+
+                    v_month=int(v_int_month)    
+                    m_list = [1,3,5,7,8,10,12]
+                    if v_month in m_list:
                         days = 31
+
+#                    print(days)
+#                    print(v_int_month)
                     
                     v_dt = date(int(v_int_year), int(v_int_month), days)
 #                   print(v_dt.strftime("%m"))
@@ -441,7 +466,7 @@ def int_cal(request):
                     v_srno_1 = (v_no*1000)+v_sr
                     #End Voucher Generation code
 
-                    vch_trans(trans_type = 3, vch_no = v_no, vch_no_srno = v_srno_1, vch_date = v_dt, vch_acc_head = ac_name, vch_acc_id = v_acc_id, vch_dc = "D", vch_amt = 0 ).save()
+                    vch_trans(trans_type = 3, vch_no = v_no, vch_no_srno = v_srno_1, vch_date = v_dt, vch_acc_head = ac_name, vch_acc_id = v_acc_id, vch_dc = "D", vch_amt = 0, srno = v_sr ).save()
                     int_cal_controll.objects.create(yrmn=m_yrmn,int_rt=v_int_rate,tr_type = 3,vch_no=v_no )
 
                     mem_det = member_detail.objects.filter()
@@ -465,7 +490,7 @@ def int_cal(request):
                                         mem_opbal = mem_opbal + vch_data.vch_amt
       #                      print(mem_opbal)
                             if mem_opbal > 0 :
-                                mem_int_amt = (float(mem_opbal) * float(v_int_rate)) / 100
+                                mem_int_amt = round(((float(mem_opbal) * float(v_int_rate)) / 100),0)
                                 v_vch_control_srno = vch_control_srno.objects.get(pk =v_no)
                                 v_sr = v_vch_control_srno.stsr_no+1
                                 v_vch_control_srno.stsr_no=v_sr
@@ -474,7 +499,7 @@ def int_cal(request):
                             
                                 vch_amt_d =vch_amt_d + mem_int_amt
 
-                                vch_trans(trans_type = 3, vch_no = v_no, vch_no_srno = v_srno_2, vch_date = v_dt, vch_acc_head = mem_acc_name, vch_acc_id = mem_acc_id, vch_dc = "C", vch_amt = mem_int_amt).save()
+                                vch_trans(trans_type = 3, vch_no = v_no, vch_no_srno = v_srno_2, vch_date = v_dt, vch_acc_head = mem_acc_name, vch_acc_id = mem_acc_id, vch_dc = "C", vch_amt = mem_int_amt,srno = v_sr).save()
 
                                 v_srno_1 = (v_no*1000)+1
                                 # print(vch_amt_d)
@@ -485,8 +510,6 @@ def int_cal(request):
 
         acc_data=account_head.objects.all()
         return render(request,'interest_cal.html',{'acc_data':acc_data})
-
-
 
 
 def div_cal(request):
@@ -514,7 +537,7 @@ def div_cal(request):
                     v_vch_control_srno.save()
                     v_srno_1 = (v_no*1000)+v_sr
                     #End Voucher Generation code
-                    vch_trans(trans_type = 3, vch_no = v_no, vch_no_srno = v_srno_1, vch_date = v_dt, vch_acc_head = ac_name, vch_acc_id = v_acc_id, vch_dc = "D", vch_amt = 0 ).save()
+                    vch_trans(trans_type = 3, vch_no = v_no, vch_no_srno = v_srno_1, vch_date = v_dt, vch_acc_head = ac_name, vch_acc_id = v_acc_id, vch_dc = "D", vch_amt = 0, srno = v_sr ).save()
                     div_cal_controll.objects.create(yrmn=v_int_year,int_rt=v_int_rate,tr_type = 3,vch_no=v_no )
                     mem_det = member_detail.objects.all()
                     vch_amt_d=0
@@ -538,7 +561,7 @@ def div_cal(request):
                                            m_mn_cal= 13- int(m_month) + 3
                                     else:
                                            m_mn_cal = int(m_month)
-                                    mem_div_amt = mem_div_amt + (float(int(share_data.no_of_share) * (float(v_int_rate)/12) * m_mn_cal)/100)
+                                    mem_div_amt = mem_div_amt + round((float(int(share_data.no_of_share) * (float(v_int_rate)/12) * m_mn_cal)/100),0)
 #                                   print(m_mn_cal)
 #                                   print(share_data.no_of_share)
 #                                   print(round(mem_div_amt,2))
@@ -551,7 +574,7 @@ def div_cal(request):
                                 v_vch_control_srno.save()
                                 v_srno_2 = (v_no*1000)+v_sr
                                 vch_amt_d =vch_amt_d + round(mem_div_amt,2)
-                                vch_trans(trans_type = 3, vch_no = v_no, vch_no_srno = v_srno_2, vch_date = v_dt, vch_acc_head = mem_acc_name, vch_acc_id = mem_acc_id, vch_dc = "C", vch_amt = mem_div_amt).save()
+                                vch_trans(trans_type = 3, vch_no = v_no, vch_no_srno = v_srno_2, vch_date = v_dt, vch_acc_head = mem_acc_name, vch_acc_id = mem_acc_id, vch_dc = "C", vch_amt = mem_div_amt, srno = v_sr).save()
                                 v_srno_1 = (v_no*1000)+1
                                 # print(vch_amt_d)
                                 # print(v_srno_1)
@@ -565,13 +588,13 @@ def div_cal(request):
 def loan_cal(request):
         error_msg=""
         if request.method == 'POST':
-            v_mem_no     = request.POST['mem_name']
+            v_mem_no       =  request.POST['mem_name']
             v_loan_amt     = request.POST['loan_amt']
             v_loan_Month   = request.POST['loan_Month']
             v_int_rate     = request.POST['int_rate']
             loan_date      = request.POST['loan_stdt']
-            v_acc_name     = request.POST['acc_name']
-            v_grp_id       = request.POST['group'] 
+            v_acc_id       = request.POST['acc_name']
+#            v_grp_id       = request.POST['group'] 
 
 #            print(v_mem_no)
             v_mem_name  = member_detail.objects.get(member_no=v_mem_no).name
@@ -580,17 +603,22 @@ def loan_cal(request):
 
             rec_cheK=loan_cal_controll.objects.filter(mem_no=v_mem_no).exists()
             if not rec_cheK :
-                     acc_check=account_head.objects.filter(acc_name=v_acc_name).exists() 
+#                     acc_check=account_head.objects.filter(acc_name=v_acc_name).exists() 
 #                     print(acc_check)
-                     if not acc_check :
+                     acc_check=account_head.objects.get(id=v_acc_id)
+                     v_acc_name = acc_check.acc_name
+                     v_grp_id = acc_check.grp_id_id
+                     v_grp_name = acc_check.grp_nm
+#        
+#                     if not acc_check :
 #                        print("vipul")
-                        v_grp_name = acc_group.objects.get(id=v_grp_id).grp_name
-                        mymem = account_head(acc_name = v_acc_name, grp_id_id = v_grp_id ,  grp_nm = v_grp_name)
-                        mymem.save()
+#                        v_grp_name = acc_group.objects.get(id=v_grp_id).grp_name
+#                        mymem = account_head(acc_name = v_acc_name, grp_id_id = v_grp_id ,  grp_nm = v_grp_name)
+#                        mymem.save()
 #                     print("jain")
 
-                     v_acc_id = account_head.objects.get(acc_name = v_acc_name).id
-                     v_grp_name = acc_group.objects.get(id=v_grp_id).grp_name
+#                     v_acc_id = account_head.objects.get(acc_name = v_acc_name).id
+#                     v_grp_name = acc_group.objects.get(id=v_grp_id).grp_name
 
 #                     print(v_acc_id)
                      # Loan Account  generation code
@@ -670,7 +698,7 @@ def loan_cal(request):
         grp_data=acc_group.objects.all()
         acc_detail=account_head.objects.all()
         mem_det = member_detail.objects.all()
-        return render(request,'loan_cal.html',{'mem_det':mem_det,'grp_data':grp_data,'v_dt':dt,'msg':error_msg})
+        return render(request,'loan_cal.html',{'mem_det':mem_det,'grp_data':grp_data,'acc_data':acc_detail,'v_dt':dt,'msg':error_msg})
 
 def int_cal_view(request):
     int_cnt_data = int_cal_controll.objects.all()
@@ -845,8 +873,9 @@ def cd_cal(request):
                         leap = 1
                     if int(v_int_month) == 2:
                         days = 28 + leap
-                    list = [1,3,5,7,8,10,12]
-                    if v_int_month in list:
+                    m_month=int(v_int_month)
+                    m_list = [1,3,5,7,8,10,12]
+                    if m_month in m_list:
                         days = 31
                     
                     v_dt = date(int(v_int_year), int(v_int_month), days)
@@ -908,4 +937,179 @@ def cd_detupdate(request,mem_yrmn):
     cdlist_data=cd_mem_list.objects.filter(yrnm = m_yrmn)
     return render(request,'cdlist_show.html',{'cdlist_data':cdlist_data,'yr':m_yrmn})
 
+def cd_vch_post(request):
+    error_msg=""
+    if request.method == 'POST':
+       m_yrmn = request.POST['cn_val']
+
+    rec_cheK=cd_cal_controll.objects.get(yrmn=m_yrmn)
+    vv_no=rec_cheK.vch_no
+    if  (vv_no == 1 ) :
+        error_msg="Voucher Already Post"
+        cdlist_data=cd_mem_list.objects.filter(yrnm = m_yrmn)
+        return render(request,'cdlist_show.html',{'cdlist_data':cdlist_data,'yr':m_yrmn,'msg':error_msg})
+    else :         
+        acc_data=account_head.objects.all()
+        return render(request,'cd_vch_post.html',{'acc_data':acc_data,'yr':m_yrmn,'msg':error_msg})
+     
          
+def cd_vch_cal(request):
+        error_msg=""
+        if request.method == 'POST':
+            v_bnk_acc_id = request.POST['bnk_acc_name']
+            v_int_acc_id = request.POST['int_acc_name']
+            v_int_month = request.POST['int_month']
+            v_vch_dt = request.POST['mem_dob']
+            m_yrmn=int(v_int_month)
+#            print(m_yrmn)
+            rec_cheK=cd_cal_controll.objects.get(yrmn=v_int_month)
+#            print(rec_cheK)
+            vv_no=rec_cheK.vch_no
+#            print(vv_no)
+            if  (int(vv_no) == 0 ) :
+#                    print("vipul")
+                    acc_data1=account_head.objects.get(id=v_bnk_acc_id)
+                    bnk_ac_name=acc_data1.acc_name        
+                    acc_data1=account_head.objects.get(id=v_int_acc_id)
+                    int_ac_name=acc_data1.acc_name        
+                    cd_data = cd_mem_list.objects.filter(yrnm = m_yrmn)
+                    # Voucher No generation code
+                    for cd_det in cd_data :
+                        v_mem_yrmn = cd_det.mem_yrmn
+#                        print("vipul1")
+                        v_loan_id = cd_det.loan_acc_id
+                        cr_amt=0
+                        if cd_det.cd_amt != 0 :
+                            v_vch_control=vch_control.objects.get(pk=2)
+                            v_no = v_vch_control.st_no+1
+                            v_vch_control.st_no=v_no
+                            v_vch_control.save()
+                            vch_control_srno(tr_type = 2 , st_no =v_no,stsr_no =  0).save()
+                            v_vch_control_srno = vch_control_srno.objects.get(pk =v_no)
+                            v_sr = v_vch_control_srno.stsr_no+1
+                            v_vch_control_srno.stsr_no=v_sr
+                            v_vch_control_srno.save()
+                            v_srno_1 = (v_no*1000)+v_sr
+                            if (cd_det.loan_acc_id != 0) and (cd_det.emi_pri != 0) :
+#                             v_loan_id = cd_det.loan_acc_id
+                                 m_amt = cd_det.emi_pri
+                                 cr_amt = cr_amt + m_amt
+                                 v_vch_control_srno = vch_control_srno.objects.get(pk =v_no)
+                                 v_sr = v_vch_control_srno.stsr_no+1
+                                 v_vch_control_srno.stsr_no=v_sr
+                                 v_vch_control_srno.save()
+                                 v_srno_2 = (v_no*1000)+v_sr
+                                 acc_data1=account_head.objects.get(id=v_loan_id)
+                                 loan_ac_name=acc_data1.acc_name        
+                                 vch_trans(trans_type = 2, vch_no = v_no, vch_no_srno = v_srno_2, vch_date = v_vch_dt, vch_acc_head = loan_ac_name, vch_acc_id = v_loan_id, vch_dc = "C", vch_amt = m_amt, srno = v_sr  ).save()
+                                 #***********************INTEREST ENTERy
+                            if (cd_det.loan_acc_id != 0) and (cd_det.emi_int != 0):
+                                 m_amt = cd_det.emi_int
+                                 cr_amt = cr_amt + m_amt
+                                 v_vch_control_srno = vch_control_srno.objects.get(pk =v_no)
+                                 v_sr = v_vch_control_srno.stsr_no+1
+                                 v_vch_control_srno.stsr_no=v_sr
+                                 v_vch_control_srno.save()
+                                 v_srno_2 = (v_no*1000)+v_sr
+                                 vch_trans(trans_type = 2, vch_no = v_no, vch_no_srno = v_srno_2, vch_date = v_vch_dt, vch_acc_head = int_ac_name, vch_acc_id = v_int_acc_id, vch_dc = "C", vch_amt = m_amt, srno = v_sr  ).save()
+                                 #***********************INTEREST ENTERy
+                            if (cd_det.acc_id != 0) and (cd_det.cd_amt != 0) :
+                                 v_cd_id = cd_det.acc_id
+                                 m_amt = cd_det.cd_amt
+                                 cr_amt = cr_amt + m_amt
+                                 v_vch_control_srno = vch_control_srno.objects.get(pk =v_no)
+                                 v_sr = v_vch_control_srno.stsr_no+1
+                                 v_vch_control_srno.stsr_no=v_sr
+                                 v_vch_control_srno.save()
+                                 v_srno_2 = (v_no*1000)+v_sr
+                                 acc_data1=account_head.objects.get(id=v_cd_id)
+                                 loan_ac_name=acc_data1.acc_name        
+                                 vch_trans(trans_type = 2, vch_no = v_no, vch_no_srno = v_srno_2, vch_date = v_vch_dt, vch_acc_head = loan_ac_name, vch_acc_id = v_cd_id, vch_dc = "C", vch_amt = m_amt , srno = v_sr ).save()
+                    
+                            if (cr_amt !=0 ) :
+                                vch_trans(trans_type = 2, vch_no = v_no, vch_no_srno = v_srno_1, vch_date = v_vch_dt, vch_acc_head = bnk_ac_name, vch_acc_id = v_bnk_acc_id, vch_dc = "D", vch_amt = cr_amt, srno = v_sr  ).save()
+                                cd_data1 = cd_mem_list.objects.get(mem_yrmn = v_mem_yrmn)
+                                cd_data1.vch_no = v_no
+                                cd_data1.save()
+            else :
+                error_msg="Voucher Already Post"
+        
+            rec_cheK.vch_no = 1                       
+            rec_cheK.save()
+        acc_data=account_head.objects.all()
+        return render(request,'cd_vch_post.html',{'acc_data':acc_data,'yr':v_int_month,'msg':error_msg})
+
+def mem_loan_master(request):   
+    mem_det   = member_detail.objects.all()
+    return render(request,'mem_loan_mas.html',{'mem_det':mem_det})
+
+def mem_loan_view(request):   
+    error_msg=''
+    if request.method == 'POST':
+        v_loan_mem_no = request.POST['mem_name']
+        error_msg=member_detail.objects.get(member_no = v_loan_mem_no).name
+        loan_mas_data_check = loan_master.objects.filter(loan_mem_no = v_loan_mem_no).exists()
+        if loan_mas_data_check :
+                mem_det = member_detail.objects.filter(member_no = v_loan_mem_no )
+                loan_mas_data = loan_master.objects.filter(loan_mem_no = v_loan_mem_no)
+                return render(request,'loan_mster_list.html',{'mem_det':mem_det,'loan_mas_data':loan_mas_data,'nm':error_msg})
+        else :
+                mem_det=member_detail.objects.all()
+                error_msg +='  [The Member has no loan Account]'
+                return render(request,'mem_loan_mas.html',{'mem_det':mem_det,'msg':error_msg})
+
+def mem_loan_add(request):   
+    grp_data=acc_group.objects.all()
+    mem_det   = member_detail.objects.all()
+    return render(request,'loan_mas_add.html',{'mem_det':mem_det,'grp_data':grp_data})
+
+def mem_loan_mas_sv(request):
+        error_msg=""
+        if request.method == 'POST':
+            v_mem_no      =  request.POST['mem_name']
+            v_acc_nm      = request.POST['acc_name']
+            v_grp_id      = request.POST['group'] 
+            v_mem_name  = member_detail.objects.get(member_no=v_mem_no).name
+            v_grp_name = acc_group.objects.get(id=v_grp_id).grp_name
+            mymem = account_head(acc_name = v_acc_nm, grp_id_id = v_grp_id ,  grp_nm = v_grp_name)
+            mymem.save()
+            v_acc_id = account_head.objects.get(acc_name=v_acc_nm).id
+#            print(v_acc_nm)
+#            print(v_acc_id)
+
+            loan_mas = loan_master(loan_mem_no = v_mem_no,loan_mem_nm = v_mem_name, loan_acc_id = v_acc_id, loan_acc_nm = v_acc_nm, disb_amt = 0 , loan_int =0 , out_amt = 0, out_int =0, loan_status = 1)
+            loan_mas.save()
+
+        grp_data=acc_group.objects.all()
+        mem_det   = member_detail.objects.all()
+        return render(request,'loan_mas_add.html',{'mem_det':mem_det,'grp_data':grp_data})
+
+def daybook_view(request):
+        dt=date.today()    
+        return render(request,'daybookview.html',{'v_dt':dt})
+
+def daybook_list(request):
+        error_msg=""
+        if request.method == 'POST':
+            v_vch_dt= request.POST['vch_stdt']
+            daybook_data = vch_trans.objects.filter(vch_date = v_vch_dt, srno=1)
+        
+        return render(request,'daybooklist.html',{'day_data':daybook_data,'v_dt':v_vch_dt})
+
+
+def vch_trans_edit(request,vch_no):
+        error_msg=""
+#        v_trans_detail=vch_trans.objects.get(vch_no_srno=vch_no)
+#    print(v_trans_detail)
+        v_srno_1 = (vch_no*1000)+1
+        m_vchno=vch_no
+        print(m_vchno)
+        v_trans=vch_trans.objects.get(vch_no_srno=v_srno_1)
+        tr_ty=v_trans.trans_type
+        trty_data=vch_type.objects.get(trans_type=tr_ty)
+        acc_data=account_head.objects.all()
+        v_trans_detail=vch_trans.objects.filter(vch_no = m_vchno)
+        print(v_trans_detail)
+#        v_srno_1 = (v_trans_detail.vch_no*1000)+1
+#        v_trans=vch_trans.objects.get(vch_no_srno=v_srno_1)
+        return render(request,'transaction_entry.html',{'trty_data':trty_data,'acc_data':acc_data,'v_trans':v_trans,'v_trans_detail':v_trans_detail,'sv_ty':tr_ty,'v_srno_1':v_srno_1})

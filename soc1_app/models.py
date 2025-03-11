@@ -54,6 +54,7 @@ class vch_trans(models.Model):
     vch_acc_id = models.IntegerField()
     vch_no_srno = models.BigIntegerField(primary_key=True)
     vch_dc = models.CharField(max_length=1)
+    srno = models.IntegerField()
 
 class vch_control(models.Model):
     tr_type  = models.IntegerField(primary_key=True)
@@ -148,6 +149,19 @@ class cd_mem_list(models.Model):
     emi_int= models.IntegerField()
     vch_no = models.BigIntegerField()
     vch_no_srno = models.BigIntegerField()
+
+class loan_master(models.Model):
+    loan_mas_id = models.AutoField(primary_key=True)
+    loan_mem_no = models.BigIntegerField()
+    loan_mem_nm = models.CharField(max_length=40)
+    loan_acc_id = models.IntegerField()
+    loan_acc_nm = models.CharField(max_length=40)
+    disb_amt  = models.FloatField()
+    loan_int = models.FloatField()
+    out_amt = models.FloatField()
+    out_int = models.FloatField()
+    loan_status = models.IntegerField()
+
 
 
  

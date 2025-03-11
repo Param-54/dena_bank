@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member List</title>
+    <style>
+        table,th,td{
+            height:7px;
+            border: 1px solid black;
+            margin: auto;
+        }
+        table{
+            border-radius: 10px;
+        }
+        tr{
+            background-color: #96D4D4;
+        }
+        th {
+            background-color: aqua;
+        }
+    </style>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="main_div_form">
+            <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
+                <h4 class="text-center text-danger my-3">Daybook for {{v_dt}} </h4>
+            </div>
+                        <table >
+                            <thead>
+                                <tr align="center">
+                                    <th>Vch Date </th>
+                                    <th>Vch No </th>
+                                    <th>Vch Type </th>
+                                    <th>Account Head</th>
+                                    <th>Debit Amount</th>
+                                    <th>Credit Amount</th>
+                                    <!-- <th colspan="2" align="text-center">Action</th>  -->
+                                    <button style= "background-color: azure;   margin-left: 975px; border-radius: 10px; "><a href="{% url 'daybook_view' %}" >View Voucher</a>
+                                    <button style= "margin-left: 2px; background-color: azure;border-radius:10px;"><a href="{% url 'main' %}" >Main Maenu</a>                                   
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                {% for acc in day_data %}
+                                <tr>
+                                    <td>{{acc.vch_date}}</td>
+                                    <td>{{acc.vch_no}}</td>
+
+                                    {% if acc.trans_type == 1 %}
+                                        <td>Payment </td>
+                                    {%endif%}
+                                    {% if acc.trans_type == 2 %}
+                                        <td>Receipt </td>
+                                    {%endif%}
+                                    {% if acc.trans_type == 3 %}
+                                        <td>Contra </td>
+                                    {%endif%}
+                                        <td>{{acc.vch_acc_head}}</td>
+                                    {% if acc.vch_dc == "D" %}
+                                         <td>{{acc.vch_amt}}</td>
+                                    {%else%}
+                                        <td></td>   
+                                    {% endif %}
+                                    {% if acc.vch_dc == "C"  %}
+                                         <td>{{acc.vch_amt}}</td>
+                                    {%else%}
+                                         <td></td>               
+                                    {%endif%}
+                                    <td><button style=" width: 75px; background-color: azure;border-radius:10px;"><a href="{% url 'vch_tr_edit' acc.vch_no %}"">Edit</a></button></td>  
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+    </div>    
+</body>
+</html>
+
+
+
+
+
+
+
+
