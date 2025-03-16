@@ -55,7 +55,8 @@ class vch_trans(models.Model):
     vch_no_srno = models.BigIntegerField(primary_key=True)
     vch_dc = models.CharField(max_length=1)
     srno = models.IntegerField()
-
+    narr = models.CharField(max_length=150)
+    
 class vch_control(models.Model):
     tr_type  = models.IntegerField(primary_key=True)
     st_no   = models.BigIntegerField()
