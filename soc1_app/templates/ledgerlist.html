@@ -25,10 +25,12 @@
     {% include 'base.html' %}
     <div class="main_div_form">
             <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
-                <h4 class="text-center text-danger my-3">Daybook for {{v_dt}} </h4>
+                <h6 class="text-center text-danger my-3">Ledger for {{acc_head_name}} </h6>
+                <h6 class="text-center text-danger my-3">From {{fv_dt}}   to {{tv_dt}} </h6>
+
             </div>
             <div>
-               <button style= "background-color: azure;   margin-left: 975px; border-radius: 10px; "><a href="{% url 'daybook_view' %}" >View Voucher</a>
+               <button style= "background-color: azure;   margin-left: 1250px; border-radius: 10px; "><a href="{% url 'ledger_view' %}" >View Ledger</a>
                <button style= "margin-left: 2px; background-color: azure;border-radius:10px;"><a href="{% url 'main' %}" >Main Maenu</a>                                   
             </div>
                 {% comment %} <div style="width:1200px;margin:auto;"> 
@@ -46,7 +48,7 @@
                         </thead>
                     </table>   
                 </div> {% endcomment %}
-                <div style="width:1025px;margin:auto; height:600px; overflow-x: auto;"> 
+                <div style="width:1200 px;margin:auto; height:600px; overflow-x: auto;"> 
                         <table >
                             <thead>
                                 <tr align="center">
@@ -56,6 +58,9 @@
                                     <th style="width:400px">Account Head</th>
                                     <th style="width:125px">Debit</th>
                                     <th style="width:125px">Credit</th>
+                                    <th style="width:125px">Balance</th>
+                                    <th style="width:74px">Action</th>
+
                                     <!-- <th colspan="2" align="text-center">Action</th>  -->
                                 </tr>
                             </thead>
@@ -74,18 +79,36 @@
                                     {% if acc.trans_type == 3 %}
                                         <td>Contra </td>
                                     {%endif%}
-                                        <td>{{acc.vch_acc_head}}</td>
+                                    {% if acc.trans_type == 4 %}
+                                        <td> </td>
+                                    {%endif%}
+
+                                    <td>{{acc.narr}}</td>
+                                    {% if acc_vch_amt == 0 %} 
+                                        <td></td>
+                                    {%endif%}
+                                    {% if acc_vch_amt == 0%} 
+                                        <td></td>
+                                    {%endif%}
+
                                     {% if acc.vch_dc == "D" %}
                                          <td style=" text-align: right;" >{{acc.vch_amt}}</td>
                                     {%else%}
-                                        <td></td>   
+                                        <td></td> 
                                     {% endif %}
                                     {% if acc.vch_dc == "C"  %}
                                          <td style=" text-align: right;">{{acc.vch_amt}}</td>
                                     {%else%}
-                                         <td></td>               
+                                         <td></td>   
                                     {%endif%}
-                                    <td><button style=" width: 75px; background-color: azure;border-radius:10px;"><a href="{% url 'vch_tr_edit' acc.vch_no %}"">Edit</a></button></td>  
+                                    <td style=" text-align: right;">{{acc.cb_bal}}</td>
+                                    {% if acc.trans_type == 4 %}
+                                        <td> </td>
+                                    {%else%}
+                                      <td><button style=" width: 75px; background-color: azure;border-radius:10px;"><a href="{% url 'vch_tr_edit' acc.vch_no %}"">Edit</a></button></td>  
+ 
+                                    {%endif%}
+                                    
                                 </tr>
                                 {% endfor %}
                             </tbody>

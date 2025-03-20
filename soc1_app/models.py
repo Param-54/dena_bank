@@ -56,7 +56,7 @@ class vch_trans(models.Model):
     vch_dc = models.CharField(max_length=1)
     srno = models.IntegerField()
     narr = models.CharField(max_length=150)
-    
+
 class vch_control(models.Model):
     tr_type  = models.IntegerField(primary_key=True)
     st_no   = models.BigIntegerField()
@@ -163,6 +163,25 @@ class loan_master(models.Model):
     out_int = models.FloatField()
     loan_status = models.IntegerField()
 
+class ledger_temp(models.Model):
+    vch_no  = models.BigIntegerField()
+    vch_date = models.DateField()
+    vch_acc_head = models.CharField(max_length=40)
+    vch_amt  = models.FloatField()
+    cb_bal = models.FloatField()
+    trans_type = models.IntegerField()
+    vch_acc_id = models.IntegerField()
+    vch_no_srno = models.BigIntegerField(primary_key=True)
+    vch_dc = models.CharField(max_length=1)
+    srno = models.IntegerField()
+    narr = models.CharField(max_length=150)
 
-
- 
+class trail_temp(models.Model):
+    trail_acc_id = models.IntegerField()
+    trail_acc_name = models.CharField(max_length=40)
+    trail_grp_id  = models.IntegerField()
+    trail_grp_name = models.CharField(max_length=40)
+    trail_debit = models.FloatField()
+    trail_credit = models.FloatField()
+    fr_dt = models.DateField()
+    to_dt = models.DateField()

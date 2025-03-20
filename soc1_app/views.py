@@ -2,7 +2,7 @@ from xml.dom.minidom import Document
 from django.shortcuts import render,redirect
 from django.shortcuts import HttpResponse
 from django.contrib import messages
-from soc1_app.models import member_detail,acc_group,account_head,vch_type,vch_trans,vch_control,vch_control_srno,mem_share_detail,int_cal_controll,div_cal_controll,loan_cal_controll,loan_repayment_sch,cd_cal_controll,cd_mem_list,loan_master
+from soc1_app.models import member_detail,acc_group,account_head,vch_type,vch_trans,vch_control,vch_control_srno,mem_share_detail,int_cal_controll,div_cal_controll,loan_cal_controll,loan_repayment_sch,cd_cal_controll,cd_mem_list,loan_master,ledger_temp,trail_temp
 from datetime import date
 import decimal
 from django.core.paginator import Paginator
@@ -1068,7 +1068,7 @@ def daybook_list(request):
         if request.method == 'POST':
             v_vch_dt= request.POST['vch_stdt']
 
-            daybook_data = vch_trans.objects.filter(vch_date = v_vch_dt, srno=1)
+            daybook_data = vch_trans.objects.filter(vch_date__gte = v_vch_dt).order_by('vch_date')
 #        print(daybook_data)
         return render(request,'daybooklist.html',{'day_data':daybook_data,'v_dt':v_vch_dt})
 
@@ -1079,7 +1079,7 @@ def vch_trans_edit(request,vch_no):
 #    print(v_trans_detail)
         v_srno_1 = (vch_no*1000)+1
         m_vchno=vch_no
-        print(m_vchno)
+#        print(m_vchno)
         v_trans=vch_trans.objects.get(vch_no_srno=v_srno_1)
         tr_ty=v_trans.trans_type
         trty_data=vch_type.objects.get(trans_type=tr_ty)
@@ -1089,3 +1089,53 @@ def vch_trans_edit(request,vch_no):
 #        v_srno_1 = (v_trans_detail.vch_no*1000)+1
 #        v_trans=vch_trans.objects.get(vch_no_srno=v_srno_1)
         return render(request,'transaction_entry.html',{'trty_data':trty_data,'acc_data':acc_data,'v_trans':v_trans,'v_trans_detail':v_trans_detail,'sv_ty':tr_ty,'v_srno_1':v_srno_1})
+
+def ledger_view(request):
+        dt=date.today()    
+        acc_data=account_head.objects.all()
+        return render(request,'ledgerview.html',{'acc_data':acc_data,'f_dt':dt,'t_dt':dt})
+
+def ledger_list(request):
+        error_msg=""
+        if request.method == 'POST':
+            vF_vch_dt= request.POST['vch_stdt']
+            tF_vch_dt= request.POST['vch_enddt']
+            v_acc_nm = request.POST['acc_name']
+            acc_name=account_head.objects.get(id=v_acc_nm).acc_name
+#            loan_ac_name=acc_data1.acc_name        
+#                            for share_data in mem_share_det :
+            ledger_opbalcal_data = vch_trans.objects.filter(vch_acc_id=v_acc_nm, vch_date__lt = vF_vch_dt).order_by('vch_date')
+            led_opbal = 0
+            for led_data in ledger_opbalcal_data :
+                 if led_data.vch_dc == "D" :
+                      led_opbal = led_opbal - led_data.vch_amt
+                 if led_data.vch_dc == "C" :
+                      led_opbal = led_opbal + led_data.vch_amt
+#            print(led_opbal)     
+            daybook_data = vch_trans.objects.filter(vch_acc_id=v_acc_nm, vch_date__gte = vF_vch_dt ,vch_date__lte = tF_vch_dt).order_by('vch_date')
+            ledger_temp.objects.all().delete()
+            led_tmp = ledger_temp(vch_no = 1 , vch_date = vF_vch_dt, vch_amt = 0 ,trans_type = 4, narr = "Opening Balance", cb_bal = led_opbal)
+            led_tmp.save()
+
+            for day_data in daybook_data :
+                  m_vch_no = day_data.vch_no 
+                  m_vch_date = day_data.vch_date
+                  m_vch_acc_head = day_data.vch_acc_head 
+                  m_vch_amt  = day_data.vch_amt 
+                  m_trans_type = day_data.trans_type 
+                  m_vch_acc_id = day_data.vch_acc_id
+                  m_vch_no_srno = day_data.vch_no_srno 
+                  m_vch_dc = day_data.vch_dc 
+                  m_srno = day_data.srno 
+                  m_narr  = day_data.narr
+                  if m_vch_dc == "D":
+                       led_opbal = led_opbal - m_vch_amt
+                  if m_vch_dc == "C":
+                       led_opbal = led_opbal + m_vch_amt
+
+                  led_tmp = ledger_temp(vch_no = m_vch_no, vch_date = m_vch_date, vch_acc_head = m_vch_acc_head, vch_amt = m_vch_amt, trans_type = m_trans_type, vch_acc_id = m_vch_acc_id, vch_no_srno = m_vch_no_srno, vch_dc = m_vch_dc, srno = m_srno, narr = m_narr, cb_bal = led_opbal)
+                  led_tmp.save()
+                  led_data=ledger_temp.objects.all()
+
+#        print(daybook_data)
+        return render(request,'ledgerlist.html',{'day_data':led_data,'acc_head_name':acc_name,'fv_dt':vF_vch_dt,'tv_dt':tF_vch_dt})

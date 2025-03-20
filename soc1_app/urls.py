@@ -62,5 +62,7 @@ urlpatterns = [
    
    path('vch_tr_edit/<int:vch_no>/', views.vch_trans_edit, name="vch_tr_edit"),
    
+   path('ledger_view/', views.ledger_view, name="ledger_view"),
+   path('ledger_show/', views.ledger_list, name="ledger_show"),
 
 ]
