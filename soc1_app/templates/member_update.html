@@ -32,11 +32,21 @@
                             <small style="color: yellow ; font-size: 15px;font-weight: bold" id="name_chk"></small>
                         </div>
                     </div>
+                    <div class="row2">
+                        <div class="r3c1">
+                            <label for="mem_db">&nbsp;&nbsp;&nbsp;Date Of Joining</label>
+                            <input type="date" class="form-control" name="join_dob" id="join_db"  value="{{mem_data.join_date|date:"Y-m-d"}}"  autocomplete="off" required >
+                        </div>
+                        <div class="r3c2">
+                            <label for="mem_db">&nbsp;&nbsp;&nbsp;Date Of Leaving</label>
+                            <input type="date" class="form-control" name="leave_dob" id="leave_db"  value="{{mem_data.resign_date|date:"Y-m-d"}}"  autocomplete="off"  >
+                        </div>
+                    </div>
 
                     <div class="row2">
                         <div class="r3c1">
                             <label for="mem_db">&nbsp;&nbsp;&nbsp;Date Of Birth</label>
-                            <input type="date" value="{{mem_data.dob|date:"Y-m-d"}}" class="form-control" name="mem_dob" id="mem_db"  value={{v_dt|date:"Y-m-d"}}  autocomplete="off" required >
+                            <input type="date" value="{{mem_data.dob|date:"Y-m-d"}}" class="form-control" name="mem_dob" id="mem_db"   autocomplete="off" required >
                         </div>
                         <div class="r3c2">
                             <label >&nbsp;&nbsp;&nbsp;Sex</label>

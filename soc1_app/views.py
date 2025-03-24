@@ -46,15 +46,24 @@ def mem_detail(request):
             v_nominee_phone=request.POST['mem_nomineephone']
             v_no_of_children=request.POST['mem_children']
             v_msex = request.POST['msex']
+            v_join_dob = request.POST['join_dob']
+#            v_leave_dob = request.POST['leave_dob']
+
             if int(v_msex) == 1 :
                 v_sex_val = 'Male'
             else :
                  v_sex_val= 'Female'
 
+#            if len(v_leave_dob) != 0 :
+#                 mymem = member_detail(member_no = v_mem_no, name = v_mem_name, address = v_mem_add, dob =v_dob, phone = v_phone,
+#                                    addhar= v_addhar, panno =v_panno, passport_no =v_passport_no, bank_name = v_bank_name, bank_account = v_bank_account,
+#                                    bank_ifsc = v_bank_ifsc, nominee = v_nominee, nominee_phone =v_nominee_phone , no_of_children = v_no_of_children,acc_name = v_acc_name,join_date = v_join_dob, resign_date = v_leave_dob,
+ #                                   op_bal  = v_opbal, grp_id_id = v_grp_id, grp_nm = v_grp_name, acc_id = v_acc_id,mem_sex = v_msex,mem_sex_val = v_sex_val)
+ #           else :
             mymem = member_detail(member_no = v_mem_no, name = v_mem_name, address = v_mem_add, dob =v_dob, phone = v_phone,
                                     addhar= v_addhar, panno =v_panno, passport_no =v_passport_no, bank_name = v_bank_name, bank_account = v_bank_account,
-                                    bank_ifsc = v_bank_ifsc, nominee = v_nominee, nominee_phone =v_nominee_phone , no_of_children = v_no_of_children,acc_name = v_acc_name,
-                                    op_bal  = v_opbal, grp_id_id = v_grp_id, grp_nm = v_grp_name, acc_id = v_acc_id,mem_sex = v_msex,mem_sex_val = v_sex_val)
+                                    bank_ifsc = v_bank_ifsc, nominee = v_nominee, nominee_phone =v_nominee_phone , no_of_children = v_no_of_children,acc_name = v_acc_name,join_date = v_join_dob, op_bal  = v_opbal, grp_id_id = v_grp_id, grp_nm = v_grp_name, acc_id = v_acc_id,mem_sex = v_msex,mem_sex_val = v_sex_val)
+                 
             mymem.save()
 
         grp_data=acc_group.objects.all()
@@ -96,8 +105,15 @@ def domem_update(request,member_no):
     v_nominee_phone=request.POST.get('mem_nomineephone')
     v_no_of_children=request.POST.get('mem_children')
     v_opbal = request.POST['mem_opbal']
+    v_join_dob = request.POST['join_dob']
+    v_leave_dob = request.POST['leave_dob']
+    v_msex = request.POST['msex']
+    if int(v_msex) == 1 :
+            v_sex_val = 'Male'
+    else :
+            v_sex_val= 'Female'
+
     mem_data =member_detail.objects.get(pk=member_no)
-  
     mem_data.member_no = v_mem_no
     mem_data.name = v_mem_name
     mem_data.address = v_mem_add
@@ -112,7 +128,13 @@ def domem_update(request,member_no):
     mem_data.nominee = v_nominee
     mem_data.nominee_phone = v_nominee_phone
     mem_data.no_of_children = v_no_of_children
-    mem_data.op_bal= v_opbal
+    mem_data.op_bal= float(v_opbal)
+    mem_data.join_date = v_join_dob
+    if len(v_leave_dob) != 0 :
+        mem_data.resign_date = v_leave_dob
+
+    mem_data.mem_sex = v_msex
+    mem_data.mem_sex_val=v_sex_val
     mem_data.save()
     
     return redirect('/memlist/')
@@ -602,6 +624,7 @@ def loan_cal(request):
             v_int_rate     = request.POST['int_rate']
             loan_date      = request.POST['loan_stdt']
             v_acc_id       = request.POST['acc_name']
+
 #            v_grp_id       = request.POST['group'] 
 
 #            print(v_mem_no)
@@ -1101,7 +1124,10 @@ def ledger_list(request):
             vF_vch_dt= request.POST['vch_stdt']
             tF_vch_dt= request.POST['vch_enddt']
             v_acc_nm = request.POST['acc_name']
-            acc_name=account_head.objects.get(id=v_acc_nm).acc_name
+            acc_dt=account_head.objects.get(id=v_acc_nm)
+            acc_name  = acc_dt.acc_name
+            led_opbal = acc_dt.op_bal
+
 #            loan_ac_name=acc_data1.acc_name        
 #                            for share_data in mem_share_det :
             ledger_opbalcal_data = vch_trans.objects.filter(vch_acc_id=v_acc_nm, vch_date__lt = vF_vch_dt).order_by('vch_date')
@@ -1139,3 +1165,176 @@ def ledger_list(request):
 
 #        print(daybook_data)
         return render(request,'ledgerlist.html',{'day_data':led_data,'acc_head_name':acc_name,'fv_dt':vF_vch_dt,'tv_dt':tF_vch_dt})
+
+def trail_view(request):
+        dt=date.today()    
+        return render(request,'trailview.html',{'f_dt':dt,'t_dt':dt})
+     
+def trail_list(request):
+        error_msg=""
+        if request.method == 'POST':
+            vF_vch_dt= request.POST['vch_stdt']
+            tF_vch_dt= request.POST['vch_enddt']
+#            loan_ac_name=acc_data1.acc_name  
+
+            acc_data=account_head.objects.all()
+            trail_temp.objects.all().delete()
+            for acc_dt in acc_data :
+                 m_acc_id = acc_dt.id
+                 m_acc_nm= acc_dt.acc_name
+                 m_grp_id = acc_dt.grp_id_id
+                 m_grp_nm = acc_dt.grp_nm
+                 m_opbal = acc_dt.op_bal
+                 led_tmp = trail_temp(trail_acc_id = m_acc_id, trail_acc_name = m_acc_nm, trail_grp_id = m_grp_id, trail_grp_name = m_grp_nm, trail_opbal = m_opbal, trail_debit = 0, trail_credit = 0 , trail_cbbal =0 , fr_dt = vF_vch_dt , to_dt = tF_vch_dt )
+                 led_tmp.save()
+
+            ledger_opbalcal_data = vch_trans.objects.filter(vch_date__lte = tF_vch_dt, ).order_by('vch_date')
+            for led_data in ledger_opbalcal_data :
+                 m_led_acc_id = led_data.vch_acc_id
+                 m_amt = led_data.vch_amt
+                 m_dc= led_data.vch_dc
+                 if (m_led_acc_id != None):
+                    trail_temp_data = trail_temp.objects.get(trail_acc_id = m_led_acc_id)
+                    v_op = float(trail_temp_data.trail_opbal)
+                    if m_dc == "D" :
+                          trail_temp_data.trail_debit = trail_temp_data.trail_debit +  m_amt
+                    if m_dc == "C" :
+                          trail_temp_data.trail_credit = trail_temp_data.trail_credit + m_amt
+
+#                    trail_temp_data.trail_cbbal = trail_temp_data.trail_opbal - trail_temp_data.trail_debit + trail_temp_data.trail_credit
+                    m_cb = trail_temp_data.trail_opbal - trail_temp_data.trail_debit + trail_temp_data.trail_credit
+
+                    if m_cb > 0 :
+                         trail_temp_data.dc  = "C"
+                         trail_temp_data.trail_cbbal = abs(m_cb)
+                    if m_cb < 0 :
+                         trail_temp_data.dc  = "D"
+                         trail_temp_data.trail_cbbal = abs(m_cb)
+                         
+                         
+                    trail_temp_data.save()
+            led_data = trail_temp.objects.all()
+
+#        print(daybook_data)
+        return render(request,'traillist.html',{'day_data':led_data,'fv_dt':vF_vch_dt,'tv_dt':tF_vch_dt})
+
+def trail_led_list(request,trail_acc_id):
+        error_msg=""
+        v_trail_acc_id = trail_acc_id
+        led_data=trail_temp.objects.get(trail_acc_id = v_trail_acc_id)
+        vF_vch_dt= led_data.fr_dt
+        tF_vch_dt= led_data.to_dt
+        v_acc_nm = led_data.trail_acc_id
+        acc_dt=account_head.objects.get(id=v_acc_nm)
+        acc_name  = acc_dt.acc_name
+        led_opbal = acc_dt.op_bal
+        ledger_opbalcal_data = vch_trans.objects.filter(vch_acc_id=v_acc_nm, vch_date__lt = vF_vch_dt).order_by('vch_date')
+        for led_data in ledger_opbalcal_data :
+                 if led_data.vch_dc == "D" :
+                      led_opbal = led_opbal - led_data.vch_amt
+                 if led_data.vch_dc == "C" :
+                      led_opbal = led_opbal + led_data.vch_amt
+#            print(led_opbal)     
+        daybook_data = vch_trans.objects.filter(vch_acc_id=v_acc_nm, vch_date__gte = vF_vch_dt ,vch_date__lte = tF_vch_dt).order_by('vch_date')
+        ledger_temp.objects.all().delete()
+        led_tmp = ledger_temp(vch_no = 1 , vch_date = vF_vch_dt, vch_amt = 0 ,trans_type = 4, narr = "Opening Balance", cb_bal = led_opbal)
+        led_tmp.save()
+
+        for day_data in daybook_data :
+                  m_vch_no = day_data.vch_no 
+                  m_vch_date = day_data.vch_date
+                  m_vch_acc_head = day_data.vch_acc_head 
+                  m_vch_amt  = day_data.vch_amt 
+                  m_trans_type = day_data.trans_type 
+                  m_vch_acc_id = day_data.vch_acc_id
+                  m_vch_no_srno = day_data.vch_no_srno 
+                  m_vch_dc = day_data.vch_dc 
+                  m_srno = day_data.srno 
+                  m_narr  = day_data.narr
+                  if m_vch_dc == "D":
+                       led_opbal = led_opbal - m_vch_amt
+                  if m_vch_dc == "C":
+                       led_opbal = led_opbal + m_vch_amt
+
+                  led_tmp = ledger_temp(vch_no = m_vch_no, vch_date = m_vch_date, vch_acc_head = m_vch_acc_head, vch_amt = m_vch_amt, trans_type = m_trans_type, vch_acc_id = m_vch_acc_id, vch_no_srno = m_vch_no_srno, vch_dc = m_vch_dc, srno = m_srno, narr = m_narr, cb_bal = led_opbal)
+                  led_tmp.save()
+                  led_data=ledger_temp.objects.all()
+
+        return render(request,'tr_led_view.html',{'day_data':led_data,'acc_head_name':acc_name,'fv_dt':vF_vch_dt,'tv_dt':tF_vch_dt})
+
+
+
+
+def trail_list_back(request):
+        error_msg=""
+        temp_data=trail_temp.objects.all().first()
+        vF_vch_dt= temp_data.fr_dt
+        tF_vch_dt= temp_data.to_dt
+        acc_data=account_head.objects.all()
+        trail_temp.objects.all().delete()
+ 
+        for acc_dt in acc_data :
+                 m_acc_id = acc_dt.id
+                 m_acc_nm= acc_dt.acc_name
+                 m_grp_id = acc_dt.grp_id_id
+                 m_grp_nm = acc_dt.grp_nm
+                 m_opbal = acc_dt.op_bal
+                 led_tmp = trail_temp(trail_acc_id = m_acc_id, trail_acc_name = m_acc_nm, trail_grp_id = m_grp_id, trail_grp_name = m_grp_nm, trail_opbal = m_opbal, trail_debit = 0, trail_credit = 0 , trail_cbbal =0 , fr_dt = vF_vch_dt , to_dt = tF_vch_dt )
+                 led_tmp.save()
+
+        ledger_opbalcal_data = vch_trans.objects.filter(vch_date__lte = tF_vch_dt, ).order_by('vch_date')
+        for led_data in ledger_opbalcal_data :
+                 m_led_acc_id = led_data.vch_acc_id
+                 m_amt = led_data.vch_amt
+                 m_dc= led_data.vch_dc
+                 if (m_led_acc_id != None):
+                    trail_temp_data = trail_temp.objects.get(trail_acc_id = m_led_acc_id)
+                    v_op = float(trail_temp_data.trail_opbal)
+                    if m_dc == "D" :
+                          trail_temp_data.trail_debit = trail_temp_data.trail_debit +  m_amt
+                    if m_dc == "C" :
+                          trail_temp_data.trail_credit = trail_temp_data.trail_credit + m_amt
+
+#                    trail_temp_data.trail_cbbal = trail_temp_data.trail_opbal - trail_temp_data.trail_debit + trail_temp_data.trail_credit
+                    m_cb = trail_temp_data.trail_opbal - trail_temp_data.trail_debit + trail_temp_data.trail_credit
+
+                    if m_cb > 0 :
+                         trail_temp_data.dc  = "C"
+                         trail_temp_data.trail_cbbal = abs(m_cb)
+                    if m_cb < 0 :
+                         trail_temp_data.dc  = "D"
+                         trail_temp_data.trail_cbbal = abs(m_cb)
+                         
+                         
+                    trail_temp_data.save()
+        led_data = trail_temp.objects.all()
+
+#        print(daybook_data)
+        return render(request,'traillist.html',{'day_data':led_data,'fv_dt':vF_vch_dt,'tv_dt':tF_vch_dt})
+
+
+def member_inclu(request):
+        dt=date.today()    
+        return render(request,'member_inclusion.html',{'f_dt':dt,'t_dt':dt})
+
+def member_inclu_show(request):
+    error_msg=""
+    if request.method == 'POST':
+        vF_vch_dt= request.POST['vch_stdt']
+        tF_vch_dt= request.POST['vch_enddt']
+        mem_data = member_detail.objects.filter(join_date__gte = vF_vch_dt , join_date__lte = tF_vch_dt )
+    return render(request,'mem_inc_list.html',{'view_data':mem_data,'fv_dt':vF_vch_dt,'tv_dt':tF_vch_dt})
+
+def member_exclu(request):
+        dt=date.today()    
+        return render(request,'member_exclusion.html',{'f_dt':dt,'t_dt':dt})
+
+def member_exclu_show(request):
+    error_msg=""
+    if request.method == 'POST':
+        vF_vch_dt= request.POST['vch_stdt']
+        tF_vch_dt= request.POST['vch_enddt']
+
+        mem_data = member_detail.objects.filter(resign_date__gte = vF_vch_dt , resign_date__lte = tF_vch_dt )
+    return render(request,'mem_exclu_list.html',{'view_data':mem_data,'fv_dt':vF_vch_dt,'tv_dt':tF_vch_dt})
+        

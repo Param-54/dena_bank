@@ -30,7 +30,7 @@
 
             </div>
             <div>
-               <button style= "background-color: azure;   margin-left: 1250px; border-radius: 10px; "><a href="{% url 'ledger_view' %}" >View Ledger</a>
+               <button style= "background-color: azure;   margin-left: 1290px; border-radius: 10px; "><a href="{% url 'trail_show_back' %}" >Back to Trail Balance</a>
                <button style= "margin-left: 2px; background-color: azure;border-radius:10px;"><a href="{% url 'main' %}" >Main Maenu</a>                                   
             </div>
                 {% comment %} <div style="width:1200px;margin:auto;"> 
@@ -48,7 +48,9 @@
                         </thead>
                     </table>   
                 </div> {% endcomment %}
-                <div style="width:1200 px;margin:auto; height:600px; overflow-x: auto;"> 
+                <div style="width:1200px;margin:auto; height:600px; overflow-x: auto;"> 
+
+                {% comment %} <div style="width:1200 px;margin:auto; height:100px; overflow-x: auto;">  {% endcomment %}
                         <table >
                             <thead>
                                 <tr align="center">

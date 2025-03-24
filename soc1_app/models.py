@@ -39,6 +39,9 @@ class member_detail(models.Model):
     grp_id = models.ForeignKey(acc_group, on_delete=models.CASCADE, null=True) 
     mem_sex = models.IntegerField(null=True)
     mem_sex_val = models.CharField(max_length=10)
+    join_date = models.DateField(null=True)
+    resign_date = models.DateField(null=True)
+    
 
 class vch_type(models.Model):
     trans_type = models.IntegerField(primary_key=True)
@@ -177,11 +180,14 @@ class ledger_temp(models.Model):
     narr = models.CharField(max_length=150)
 
 class trail_temp(models.Model):
-    trail_acc_id = models.IntegerField()
+    trail_acc_id = models.IntegerField(primary_key=True)
     trail_acc_name = models.CharField(max_length=40)
     trail_grp_id  = models.IntegerField()
     trail_grp_name = models.CharField(max_length=40)
+    trail_opbal = models.FloatField()
     trail_debit = models.FloatField()
     trail_credit = models.FloatField()
+    trail_cbbal = models.FloatField()
     fr_dt = models.DateField()
     to_dt = models.DateField()
+    dc = models.CharField(max_length=1)

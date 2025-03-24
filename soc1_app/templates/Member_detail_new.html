@@ -12,11 +12,11 @@
     {% include 'base.html' %}
     <div class="main_div_form">
             <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
-                    <h4 class="text-center text-danger my-3">New Member Creation</h4>
+                    <h4 class="text-center text-danger my-2">New Member Creation</h4>
             </div>
             <form action="{% url 'detail'  %}"  method="post">
                 {% csrf_token %}
-                <div style="width: 1200px; height: 725px; margin: 40px auto; background-color:cornflowerblue; border-radius: 20px;">
+                <div style="width: 1200px; height: 750px; margin: 20px auto; background-color:cornflowerblue; border-radius: 20px;">
                     <div class="row1">
                         <div class="r1c1">
                             <label for="memmo">Member No</label>
@@ -28,6 +28,17 @@
                             <input type="text" class="form-control" name="mem_name" id="mem_nm"   placeholder="Member Name" onclick="mem_nm_check()"  oninput="mem_nm_check()"  autocomplete="off"  required  maxlength="35" size="35">
                             <small style="color: yellow ; font-size: 15px;font-weight: bold" id="name_chk"></small>
                         </div>
+                    </div>
+
+                    <div class="row2">
+                        <div class="r3c1">
+                            <label for="mem_db">&nbsp;&nbsp;&nbsp;Date Of Joining</label>
+                            <input type="date" class="form-control" name="join_dob" id="join_db"  value={{v_dt|date:"Y-m-d"}}  autocomplete="off" required >
+                        </div>
+                        {% comment %} <div class="r3c2">
+                            <label for="mem_db">&nbsp;&nbsp;&nbsp;Date Of Leaving</label>
+                            <input type="date" class="form-control" name="leave_dob" id="leave_db"    autocomplete="off"  >
+                        </div> {% endcomment %}
                     </div>
 
                     <div class="row2">

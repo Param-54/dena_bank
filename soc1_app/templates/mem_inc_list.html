@@ -25,8 +25,8 @@
     {% include 'base.html' %}
     <div class="main_div_form">
 
-            <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
-                <h4 class="text-center text-danger my-3">Member List</h4>
+            <div style="width: 500px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
+                <h5 class="text-center text-danger my-1">Member Inclusion List From {{fv_dt}}   to {{tv_dt}}</h5>
             </div>
          {% comment %} <div style="overflow-x: auto;" > {% endcomment %}
 
@@ -38,28 +38,28 @@
                                 <tr align="center">
                                     <th style="width:80px">Mem No</th>
                                     <th style="width:350px">Name</th>
-                                    <th style="width:125px">Date of Birth</th>
+                                    <th style="width:125px">Date of Joining</th>
                                     <th style="width:125px">Sex</th>
                                     <th style="width:125px">Phone</th>
                                     <th style="width:125px">Address</th>
                                     <th style="width:125px">Nominee</th>
                                     <th  colspan="2" align="text-center" >Action</th>
-                                    <button style= "background-color: azure;   margin-left: 990px; border-radius: 10px; "><a href="{% url 'detail' %}" >Add New</a>
+                                    <button style= "background-color: azure;   margin-left: 955px; border-radius: 10px; "><a href="{% url 'mem_incl' %}" >Inclusion List</a>
                                     <button style= " background-color: azure;border-radius:10px;"><a href="{% url 'main' %}" >Main Maenu</a>
                                 </tr>
                             </thead>
                             <tbody> 
-                                {% for mem in mem_data %}
+                                {% for mem in view_data %}
                                     <tr>
                                         <td>{{mem.member_no}}</td>
                                         <td>{{mem.name}}</td>
-                                        <td>{{mem.dob}}</td>
+                                        <td>{{mem.join_date}}</td>
                                         <td>{{mem.mem_sex_val}}</td>
                                         <td>{{mem.phone}}</td>
                                         <td>{{mem.address}}</td>
                                         <td>{{mem.nominee}}</td>
                                         <td><button style="width:75px; background-color: azure; border-radius: 10px;"><a href="{% url 'update' mem.member_no %}">Edit</a></button></td>
-                                        <td><button style=" width: 75px; background-color: red;border-radius:10px;"><a href="{% url 'del' mem.member_no %}">Del</a></button></td>
+                                        {% comment %} <td><button style=" width: 75px; background-color: red;border-radius:10px;"><a href="{% url 'del' mem.member_no %}">Del</a></button></td> {% endcomment %}
                                     </tr>
                                 {% endfor %}
                             </tbody>

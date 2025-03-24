@@ -65,4 +65,16 @@ urlpatterns = [
    path('ledger_view/', views.ledger_view, name="ledger_view"),
    path('ledger_show/', views.ledger_list, name="ledger_show"),
 
+   path('trail_view/', views.trail_view, name="trail_view"),
+   path('trail_show/', views.trail_list, name="trail_show"),
+   path('trail_led_view/<int:trail_acc_id>/', views.trail_led_list, name="trail_led_view"),
+   path('trail_show_back/', views.trail_list_back, name="trail_show_back"),
+   
+   path('mem_incl/', views.member_inclu, name="mem_incl"),
+   path('mem_inclusion_show/', views.member_inclu_show, name="mem_inclusion_show"),
+
+   path('mem_exclu/', views.member_exclu, name="mem_exclu"),
+   path('mem_exclu_show/', views.member_exclu_show, name="mem_exclu_show"),
+ 
+
 ]
