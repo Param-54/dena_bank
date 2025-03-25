@@ -76,5 +76,7 @@ urlpatterns = [
    path('mem_exclu/', views.member_exclu, name="mem_exclu"),
    path('mem_exclu_show/', views.member_exclu_show, name="mem_exclu_show"),
  
+   path('mem_complete_list/', views.member_complete_list, name="mem_complete_list"),
+   path('mem_complete_detail/', views.member_complete_detail, name="mem_comp_detail"),
 
 ]

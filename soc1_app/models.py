@@ -191,3 +191,16 @@ class trail_temp(models.Model):
     fr_dt = models.DateField()
     to_dt = models.DateField()
     dc = models.CharField(max_length=1)
+
+class acc_temp(models.Model):
+    mem_no = models.BigIntegerField(primary_key=True)
+    mem_name = models.CharField(max_length=40)
+    join_date = models.DateField()
+    res_date = models.DateField()
+    ledger_amt = models.FloatField()
+    share_amt = models.FloatField()
+    loan_amt = models.BigIntegerField()
+    loan_outstanding = models.BigIntegerField()
+    loan_int_paid = models.FloatField()
+    loan_ind_tobe = models.FloatField()
+    

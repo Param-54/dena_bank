@@ -50,6 +50,7 @@
                                     <th>Emi Amount</th>
                                     <th>Principal Deduction</th>
                                     <th>Interest</th>
+                                    <th>Paid</th>
                                     <!-- <th colspan="2" align="text-center">Action</th>  -->
                                 </tr>
                             <tbody> 
@@ -60,6 +61,12 @@
                                     <td>{{acc.emi_amt}}</td>
                                     <td>{{acc.monthly_prinipal_amt_deduction}}</td>
                                     <td>{{acc.loan_int_amt}}</td>
+                                    {% if acc.emi_paid == 1 %}
+                                        <td>Not Paid</td>
+                                    {% endif%}
+                                    {% if acc.emi_paid == 2 %}
+                                        <td>Paid</td>
+                                    {% endif%}
                                 </tr>
                                 {% endfor %}
                             </tbody>

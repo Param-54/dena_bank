@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        table,th,td{
+            height:7px;
+            border: 1px solid black;
+            margin: auto;
+        }
+        table{
+            border-radius: 10px;
+        }
+        tr{
+            background-color: #96D4D4;
+        }
+        th {
+            background-color: aqua;
+        }
+    </style>
+    <title>Member List</title>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="main_div_form">
+
+            <div style="width: 500px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
+                <h6 class="text-center text-danger my-1">Member Complete list upto {{f_dt}}</h6>
+            </div>
+         {% comment %} <div style="overflow-x: auto;" > {% endcomment %}
+
+            <div style="width:950px;margin:auto; height:600px; overflow-x: auto;"> 
+
+            {% comment %} <div class="col=md-12 offset-md-3">  border="2" cellspacing="7"  class="table table-striped"--> {% endcomment %}
+                        <table >
+                            <thead>
+                                <tr align="center">
+                                    <th style="width:80px">Mem No</th>
+                                    <th style="width:350px">Name</th>
+                                    <th style="width:125px">Date of Join</th>
+                                    <th style="width:125px">No of Share</th>
+                                    <th style="width:125px">Ledger Balance</th>
+                                    <th style="width:150px">Loan Outstanind</th>
+                                    {% comment %} <th style="width:125px">Nominee</th> {% endcomment %}
+                                   {% comment %} <th  colspan="2" align="text-center" >Action</th> {% endcomment %}
+                                    <button style= "background-color: azure;   margin-left: 655px; border-radius: 10px; "><a href="{% url 'mem_complete_list' %}" >Member Complete list</a>
+                                    <button style= " background-color: azure;border-radius:10px;"><a href="{% url 'main' %}" >Main Maenu</a>
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                {% for mem in view_data %}
+                                    <tr>
+                                        <td>{{mem.mem_no}}</td>
+                                        <td>{{mem.mem_name}}</td>
+                                        <td>{{mem.join_date}}</td>
+                                        <td>{{mem.share_amt}}</td>
+                                        <td>{{mem.ledger_amt}}</td>
+                                        <td>{{mem.loan_outstanding}}</td>
+                                        {% comment %} <td>{{mem.nominee}}</td> {% endcomment %}
+                                        {% comment %} <td><button style="width:75px; background-color: azure; border-radius: 10px;"><a href="{% url 'update' mem.member_no %}">Edit</a></button></td> {% endcomment %}
+                                        {% comment %} <td><button style=" width: 75px; background-color: red;border-radius:10px;"><a href="{% url 'del' mem.member_no %}">Del</a></button></td> {% endcomment %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+            </div>
+    </div> -->
+    </div>    
+</body>
+
+</html>
