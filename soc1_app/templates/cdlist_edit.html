@@ -27,7 +27,7 @@
                         </div> 
                         <div class="intr2">
                             <label class-"form-label"  class="md-3 ml-8" >Member Name</label>
-                            <input type="text"  class="form-control" name="cd_mem_name" id="cd_mem_name" placeholder="Member Name"  value={{cdlist_data.mem_name}} autocomplete="off" readonly maxlength="10" size="10">
+                            <input type="text"  class="form-control" name="cd_mem_name" id="cd_mem_name" placeholder="Member Name"    maxlength="40" size="40" value="{{cdlist_data.mem_name}}" autocomplete="off"  >
                         </div>
                         
                         <div class="intr2">
@@ -50,7 +50,7 @@
                         <div class="container text-center my-1" >
                             <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" name="cn_val" value={{cdlist_data.yrnm}} type="submit">Update</button>
                             <!-- <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" name="cn_val" value=2 type="submit">Save</button> -->
-                            <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}" >Main Menu</a></button>
+                            <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'home' %}" >Main Menu</a></button>
                         </div> 
                     </div>
                 </form>

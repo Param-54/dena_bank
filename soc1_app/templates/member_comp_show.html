@@ -28,11 +28,14 @@
             <div style="width: 500px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
                 <h6 class="text-center text-danger my-1">Member Complete list upto {{f_dt}}</h6>
             </div>
-         {% comment %} <div style="overflow-x: auto;" > {% endcomment %}
+   
+            <div class="container text-center my-1">
+                <button style= "background-color: azure;   margin-left: 655px; border-radius: 10px; "><a href="{% url 'mem_complete_list' %}" >Member Complete list</a>
+                <button style= " background-color: azure;border-radius:10px;"><a href="{% url 'home' %}" >Main Maenu</a>
+            </div>
+            <div style="width:950px;margin:auto; height:500px; overflow-x: auto;"> 
 
-            <div style="width:950px;margin:auto; height:600px; overflow-x: auto;"> 
-
-            {% comment %} <div class="col=md-12 offset-md-3">  border="2" cellspacing="7"  class="table table-striped"--> {% endcomment %}
+ 
                         <table >
                             <thead>
                                 <tr align="center">
@@ -44,8 +47,7 @@
                                     <th style="width:150px">Loan Outstanind</th>
                                     {% comment %} <th style="width:125px">Nominee</th> {% endcomment %}
                                    {% comment %} <th  colspan="2" align="text-center" >Action</th> {% endcomment %}
-                                    <button style= "background-color: azure;   margin-left: 655px; border-radius: 10px; "><a href="{% url 'mem_complete_list' %}" >Member Complete list</a>
-                                    <button style= " background-color: azure;border-radius:10px;"><a href="{% url 'main' %}" >Main Maenu</a>
+
                                 </tr>
                             </thead>
                             <tbody> 

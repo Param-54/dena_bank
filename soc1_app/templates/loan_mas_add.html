@@ -18,6 +18,7 @@
                <form action="{% url 'mem_loan_sv' %}"  method="post">
                 {% csrf_token %} 
                     <div class="mainint">
+ 
                         <div class="intr1">
                             <div class="intr1c1">
                                 <label class-"form-label" class="md-3 ml-8" >Member Name</label>
@@ -27,14 +28,11 @@
                                         <option value={{memdt.member_no}} >{{memdt.name}}</option>
                                     {% endfor %}
                                 </select>
-
-                                
-                                {% comment %} <input type="Text" value="{{mem_data.name}}" class="form-control ml-1"  name="mem_no" autofocus id="memno"  autocomplete="off"  placeholder="Member No" readonly maxlength="40" size="40"> {% endcomment %}
                             </div>
                         </div>
                         <div class="intr2">
                                 <label >Loan Account Name</label>
-                                <input type="Text"  class="form-control"  name="acc_name"   id="accnm"  autocomplete="off" value = "{{mem_name}}" placeholder="Account Name" required   maxlength="40" size="40">
+                                <input type="Text"  class="form-control"  name="acc_name"   id="accnm"  autocomplete="off" value = "{{loan_name}}" placeholder="Account Name" required   maxlength="40" size="40">
                         </div>
 
                         <div class="intr2">
@@ -49,7 +47,7 @@
                     <br></br>
                     <div class="container text-center my-1" >
                             <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" type="submit">Save</button>
-                            <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}" >Exit</a></button>
+                            <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'home' %}" >Exit</a></button>
                     </div> 
                         {% comment %} {% if msg  %}
                             <div class="alert alert-danger" style="text-align:center; background:red;" role="alert">

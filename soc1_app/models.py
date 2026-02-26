@@ -7,6 +7,7 @@ from django.utils import formats
 # Create your models here.
 class acc_group(models.Model):
     grp_name = models.CharField(max_length=10)
+
 class account_head(models.Model):
     acc_name = models.CharField(max_length=40)
     op_bal = models.FloatField()
@@ -41,6 +42,7 @@ class member_detail(models.Model):
     mem_sex_val = models.CharField(max_length=10)
     join_date = models.DateField(null=True)
     resign_date = models.DateField(null=True)
+    loan_ac_no = models.IntegerField(null=True)
     
 
 class vch_type(models.Model):
@@ -77,6 +79,7 @@ class int_cal_controll(models.Model):
     tr_type  = models.IntegerField()
     vch_no   = models.BigIntegerField()
     int_rt   = models.FloatField()
+    int_acc_id = models.IntegerField()
 
 class div_cal_controll(models.Model):
     yrmn     = models.IntegerField(primary_key=True)
@@ -203,4 +206,8 @@ class acc_temp(models.Model):
     loan_outstanding = models.BigIntegerField()
     loan_int_paid = models.FloatField()
     loan_ind_tobe = models.FloatField()
-    
+
+class user_profile(models.Model):
+    user_name = models.CharField(max_length=40, primary_key=True)
+    passcode = models.CharField(max_length=15)
+    user_type = models.CharField(max_length=10)    

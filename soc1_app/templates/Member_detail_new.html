@@ -56,7 +56,7 @@
                         </div>
                         <div class="r3c3">
                             <label >&nbsp;&nbsp;&nbsp;Phone No</label>
-                            <input type="text" class="form-control" name="mem_phone" id="mem_ph" placeholder="Phone No"  autocomplete="off" required maxlength="15" size="15" onclick="memcheck(mem_ph)" oninput="memcheck(mem_ph)">
+                            <input type="text" class="form-control" name="mem_phone" id="mem_ph" placeholder="Phone No" value='0' autocomplete="off" required maxlength="15" size="15" onclick="memcheck(mem_ph)" oninput="memcheck(mem_ph)">
                             <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
                         </div>
  
@@ -64,18 +64,18 @@
                     <div class="row3">   
                         <div class="r3c1">
                             <label >&nbsp;&nbsp;&nbsp;Addhar No</label>
-                            <input type="text" class="form-control" name="mem_addhar" id="mem_adh" placeholder="Addhar No"  autocomplete="off" required maxlength="15" size="15">
+                            <input type="text" class="form-control" name="mem_addhar" id="mem_adh" placeholder="Addhar No" value='0' autocomplete="off" required maxlength="15" size="15">
                             <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
                         </div>
                 
                         <div class="r3c2">
                             <label >&nbsp;&nbsp;&nbsp;Pan No</label>
-                            <input type="text" class="form-control" name="mem_pan" id="mem_panno" placeholder="Pan No"  autocomplete="off" required maxlength="15" size="15">
+                            <input type="text" class="form-control" name="mem_pan" id="mem_panno" placeholder="Pan No" value='0'  autocomplete="off" required maxlength="15" size="15">
                             <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
                         </div>
                         <div class="r3c3">
                             <label >&nbsp;&nbsp;&nbsp;Passport</label>
-                            <input type="text" class="form-control" name="mem_Pass" id="mem_passno" placeholder="Passport No"  autocomplete="off" required maxlength="15" size="15">
+                            <input type="text" class="form-control" name="mem_Pass" id="mem_passno" placeholder="Passport No" value='0'  autocomplete="off" required maxlength="15" size="15">
                             <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
                         </div>
                     </div>
@@ -83,17 +83,17 @@
                     <div class="row4"> 
                         <div class="r4c1">
                             <label >&nbsp;&nbsp;&nbsp;Bank Name</label>
-                            <input type="text" class="form-control" name="mem_bank" id="mem_bank" placeholder="Bank Name"  autocomplete="off" required maxlength="40" size="40">
+                            <input type="text" class="form-control" name="mem_bank" id="mem_bank" placeholder="Bank Name" value='0' autocomplete="off" required maxlength="40" size="40">
                             <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
                         </div>
                         <div class="r4c2">
                             <label >&nbsp;&nbsp;&nbsp;Bank Account No</label>
-                            <input type="text" class="form-control" name="mem_bankaccount" id="mem_acccount" placeholder="Bank Account No"  autocomplete="off" required maxlength="16" size="16">
+                            <input type="text" class="form-control" name="mem_bankaccount" id="mem_acccount" value='0' placeholder="Bank Account No"  autocomplete="off" required maxlength="16" size="16">
                             <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
                         </div>
                         <div class="r4c3">
                             <label>&nbsp;&nbsp;&nbsp;IFSC</label>
-                            <input type="text" class="form-control" name="mem_ifsc" id="mem_bnifsc" placeholder="IFSC No"  autocomplete="off" required maxlength="15" size="15">
+                            <input type="text" class="form-control" name="mem_ifsc" id="mem_bnifsc" value='0' placeholder="IFSC No"  autocomplete="off" required maxlength="15" size="15">
                             <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
                         </div>
                     </div>
@@ -101,18 +101,18 @@
                     <div class="row5">
                         <div class="r5c1">
                             <label >&nbsp;&nbsp;&nbsp;Nominee</label>
-                            <input type="text" class="form-control" name="mem_nominee" id="mem_nomineename" placeholder="Nominee Name"  autocomplete="off" required maxlength="40" size="40">
+                            <input type="text" class="form-control" name="mem_nominee" id="mem_nomineename" value='0' placeholder="Nominee Name"  autocomplete="off" required maxlength="40" size="40">
                             <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
                         </div> 
                         
                         <div class="r5c2">
                             <label >&nbsp;&nbsp;&nbsp;Nominee Phone No</label>
-                            <input type="text" class="form-control" name="mem_nomineephone" id="mem_noph" placeholder="Nominee Phone  No"  autocomplete="off" required maxlength="15" size="15">
+                            <input type="text" class="form-control" name="mem_nomineephone" id="mem_noph" value='0' placeholder="Nominee Phone  No"  autocomplete="off" required maxlength="15" size="15">
                             <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
                         </div>
                         <div class="r5c3">
                             <label >&nbsp;&nbsp;&nbsp;No of children</label>
-                            <input type="text" class="form-control" name="mem_children" id="mem_child" placeholder="No of children"  autocomplete="off" required maxlength="15" size="15">
+                            <input type="text" class="form-control" name="mem_children" id="mem_child" value='0' placeholder="No of children"  autocomplete="off" required maxlength="15" size="15">
                             <small style="color: yellow ; font-size: 15px;font-weight: bold" id="nm_chk"></small>
                         </div>
 
@@ -148,22 +148,19 @@
 
                     <div class="container text-center my-1" >
                         <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" type="submit">Save</button>
-                        <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}" >Exit</a></button>
+                        <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'home' %}" >Exit</a></button>
                         <button class="btn btn=danger text-white" style ="background-color: white; border-radius: 10px;" ><a href="{% url 'list' %}">Member List</a></button>
                     </div> 
                 </div>
             </form>
     </div>
 </body>
-
     <script type="text/javascript" src="{% static '/js/first.js' %}"></script>
-  
     <script>
             function mem_ad1(){
                    let mes="ad saved"
                     alert(mes);
             }
-
             function memcheck()  {
                 var memid_val = document.getElementById("memno").value;
                 // alert(memid_val);
@@ -176,7 +173,6 @@
                     document.getElementById("nm_chk").innerHTML = "" ;
                 }
             }
-
             function dup_check(){
                 var memid_val = document.getElementById("memno").value;
                 alert(memid_val);
@@ -184,14 +180,13 @@
                 alert(new_check);
                 if (new_check){
                     document.getElementById("nm_chk").innerHTML = "Duplicate";   
-                    //messages.success(request, 'Section already exists')
-                    //    return redirect("/section/")
+
                 }
             }
 
             function mem_nm_check() {
                 let memnm_val = document.getElementById("mem_nm").value;
-                //document.getElementsByid("accnm").value = memnm_val;
+ 
                 pattern = /[0-9+-@#%^&*$!.=]/;
                 let res = pattern.test(memnm_val);
                 if (res == true){

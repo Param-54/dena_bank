@@ -37,6 +37,11 @@ P {
     background-color: rgb(30, 5, 170);
     border-radius: 5px;
 }
+.login_div_right{
+    width: 600px;
+  
+}
+
 .base_div_left{
     margin-left: 150px;
     height: 45px;

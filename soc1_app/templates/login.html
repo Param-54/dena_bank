@@ -19,14 +19,35 @@
             Dena Bank
           </div>
           <div class="base_div_left">
-                <center><p>Base Dena Staff co-operative Thrift and Credit Society Ltd [U-504]</p></center>
+                <center><p>Dena Staff co-operative Thrift and Credit Society Ltd [U-504]</p></center>
           </div>
         </div>
-        {% include 'navbar.html' %}
-    </div>    
-    
-    
-        
+    </div>
+        <div style="padding-top: 30px;">
+            <div style="width: 25%; height: 50px; margin:auto; border: 2px solid black;border-radius: 20px;  background-color: beige;">
+                <h5 class="text-center text-danger my-3">User Login</h5>
+            </div>
+        </div>
+        <div style="width: 25%; height: 300px; margin:auto; border: 2px solid black; border-radius: 20px; background-color: beige; padding: 20px;">
+            <form method="post" action="{% url 'home' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    {% if msg  %}
+                         <div class="alert alert-danger" style="text-align:center;" role="alert">
+                                {{msg}}
+                         </div>
+                    {% endif %}
+                </form>
+        </div>
+       
      <!-- Optional JavaScript; choose one of the two! -->
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
     <script type="text/javascript" src="{% static '/js/first.js' %}"></script>

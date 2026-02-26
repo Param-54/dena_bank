@@ -24,15 +24,15 @@
 <body>
     {% include 'base.html' %}
     <div class="main_div_form">
-
             <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
                 <h4 class="text-center text-danger my-3">Member List</h4>
             </div>
-         {% comment %} <div style="overflow-x: auto;" > {% endcomment %}
-
-            <div style="width:1200px;margin:auto; height:600px; overflow-x: auto;"> 
-
-            {% comment %} <div class="col=md-12 offset-md-3">  border="2" cellspacing="7"  class="table table-striped"--> {% endcomment %}
+            <div class="container text-center my-1">
+                <button style= "background-color: azure;    border-radius: 10px; "><a href="{% url 'detail' %}" >Add New</a></button>
+                <button style= " background-color: azure;  border-radius:10px;"><a href="{% url 'home' %}" >Main Maenu</a></button>
+            </div>
+     
+            <div style="width:1200px;margin:auto; height:400px; overflow-x: auto;"> 
                         <table >
                             <thead>
                                 <tr align="center">
@@ -44,8 +44,6 @@
                                     <th style="width:125px">Address</th>
                                     <th style="width:125px">Nominee</th>
                                     <th  colspan="2" align="text-center" >Action</th>
-                                    <button style= "background-color: azure;   margin-left: 990px; border-radius: 10px; "><a href="{% url 'detail' %}" >Add New</a>
-                                    <button style= " background-color: azure;border-radius:10px;"><a href="{% url 'main' %}" >Main Maenu</a>
                                 </tr>
                             </thead>
                             <tbody> 
@@ -65,7 +63,7 @@
                             </tbody>
                         </table>
             </div>
-    </div> -->
+   
     </div>    
 </body>
 

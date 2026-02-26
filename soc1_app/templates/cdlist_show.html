@@ -27,10 +27,14 @@
             <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
                 <h4 class="text-center text-danger my-3">Member CD Detail for [ {{yr}} ]</h4>
             </div>
+{% comment %}             {% if msg  %}
+                <script>alert("{{ msg }}")</script>
+                
+            {% endif %} {% endcomment %}
+
             <form  action="{% url 'cdvchpost' %}" method='POST'>
-                {% comment %} {% url 'cdvchpost' %} {% endcomment %}
                 {% csrf_token %} 
-                <div style="width:1200px;margin:auto; height:675px; overflow-x: auto;"> 
+                <div style="width:1200px;margin:auto; height:400px; overflow-x: auto;"> 
                         <table >
                             <thead>
                                 <tr align="center">
@@ -52,10 +56,7 @@
                                     <td>{{acc.emi_pri}}</td>
                                     <td>{{acc.emi_int}}</td>
 
-                                    {% comment %} <td><input type="number"  name="acc_opbal" value="{{acc.cd_amt}}" autofocus id="opbal"  autocomplete="off" placeholder="Amount" required  step="0.01" maxlength="15" size="" ></td> {% endcomment %}
                                     <td><button style=" width: 75px; background-color: azure;border-radius:10px;"><a href="{% url 'cd_listupdate' acc.mem_yrmn %}">Update</a></button></td>   
-                                    {% comment %} <td><button  style ="background-color: red; border-radius: 10px; height: 30px;font-size: 16px; text-align: center;" name="cn_val" value = {{acc.yrnm}}  type="submit">Save</button></td>                                     {% endcomment %}
-                                    {% comment %} <td><button style=" width: 75px; background-color: azure;border-radius:10px;"><a href="#">Edit</a></button></td>   {% endcomment %}
                                     <td><button style="width:75px; background-color: red; border-radius: 10px;"><a href="#">Delete</a></button></td>
                                 </tr>
                                 {% endfor %}
@@ -63,14 +64,13 @@
                         </table>
                 </div>       
                         <div style="width:400px; background-color: red; margin:auto; border-radius:10px">
-                            <button style= "background-color: azure;margin-left:75px; border-radius:10px;"><a href="{% url 'main' %}" >Main Maenu</a>                                   
+                            <button style= "background-color: azure;margin-left:75px; border-radius:10px;"><a href="{% url 'home' %}" >Main Maenu</a>                                   
                             <button style= "background-color: azure;  width: 150px; margin: auto;border-radius: 10px;" name="cn_val" value={{yr}} >Voucher Post</button>
                             {% if msg  %}
                             <div class="alert alert-danger" style="text-align:center;" role="alert">
                                 {{msg}}
                             </div>
                         {% endif %}
-
                         </div>
             </form>            
     </div>    

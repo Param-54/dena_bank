@@ -1,18 +1,42 @@
+from urllib import request
 from xml.dom.minidom import Document
 from django.shortcuts import render,redirect
 from django.shortcuts import HttpResponse
 from django.contrib import messages
-from soc1_app.models import member_detail,acc_group,account_head,vch_type,vch_trans,vch_control,vch_control_srno,mem_share_detail,int_cal_controll,div_cal_controll,loan_cal_controll,loan_repayment_sch,cd_cal_controll,cd_mem_list,loan_master,ledger_temp,trail_temp,acc_temp
+from soc1_app.models import member_detail,acc_group,account_head,vch_type,vch_trans,vch_control,vch_control_srno,mem_share_detail,int_cal_controll,div_cal_controll,loan_cal_controll,loan_repayment_sch,cd_cal_controll,cd_mem_list,loan_master,ledger_temp,trail_temp,acc_temp,user_profile
 from datetime import date
 import decimal
 from django.core.paginator import Paginator
+from django.db.models import Q
 
 #from soc1_app.models import DateModel
 
 # Create your views here.
+v_user = ""
+
+def mainlogin(request):
+     return render(request,'login.html')
 
 def home(request):
-    return render(request,'base.html')
+    error_msg=""
+    if request.method == 'POST':
+        v_user = request.POST['username']
+        v_pass = request.POST['password']
+#        user_data = user_profile.objects.get(pk=v_user)        
+        user_data=user_profile.objects.filter(user_name=v_user , passcode=v_pass).exists() 
+
+        if user_data :
+            return render(request,'base.html',{'uname':v_user})
+        else:
+            error_msg="Invalid Username or Password"
+            return render(request,'login.html',{'msg':error_msg})
+    else:
+        error_msg="Please Login"
+        messages.error(request, 'Please Login')
+
+    v_user=request.GET.get('username', '') 
+    return render(request,'base.html',{'uname':v_user})
+
 
 def mem_detail(request):
         if request.method == 'POST':
@@ -20,17 +44,13 @@ def mem_detail(request):
             v_opbal = request.POST['mem_opbal']
             v_grp_id = request.POST['group']   
             v_grp_name = acc_group.objects.get(id=v_grp_id).grp_name
-            
             acc_check =  account_head.objects.filter(acc_name=v_acc_name).exists()
 #            print(acc_check)
             if not acc_check :
 #                print("acc vipul")
                 mymem = account_head(acc_name = v_acc_name, grp_id_id = v_grp_id , op_bal = v_opbal, grp_nm = v_grp_name)
                 mymem.save()
-
-
             v_acc_id=account_head.objects.get(acc_name=v_acc_name).id
-
             v_mem_no = request.POST['mem_no']
             v_mem_name = request.POST['mem_name']
             v_mem_add = request.POST['mem_add']
@@ -48,7 +68,6 @@ def mem_detail(request):
             v_msex = request.POST['msex']
             v_join_dob = request.POST['join_dob']
 #            v_leave_dob = request.POST['leave_dob']
-
             if int(v_msex) == 1 :
                 v_sex_val = 'Male'
             else :
@@ -60,6 +79,7 @@ def mem_detail(request):
 #                                    bank_ifsc = v_bank_ifsc, nominee = v_nominee, nominee_phone =v_nominee_phone , no_of_children = v_no_of_children,acc_name = v_acc_name,join_date = v_join_dob, resign_date = v_leave_dob,
  #                                   op_bal  = v_opbal, grp_id_id = v_grp_id, grp_nm = v_grp_name, acc_id = v_acc_id,mem_sex = v_msex,mem_sex_val = v_sex_val)
  #           else :
+
             mymem = member_detail(member_no = v_mem_no, name = v_mem_name, address = v_mem_add, dob =v_dob, phone = v_phone,
                                     addhar= v_addhar, panno =v_panno, passport_no =v_passport_no, bank_name = v_bank_name, bank_account = v_bank_account,
                                     bank_ifsc = v_bank_ifsc, nominee = v_nominee, nominee_phone =v_nominee_phone , no_of_children = v_no_of_children,acc_name = v_acc_name,join_date = v_join_dob, op_bal  = v_opbal, grp_id_id = v_grp_id, grp_nm = v_grp_name, acc_id = v_acc_id,mem_sex = v_msex,mem_sex_val = v_sex_val)
@@ -80,7 +100,7 @@ def mem_list(request):
 def mem_delete(request,member_no):
     mem_data = member_detail.objects.get(pk=member_no)
     mem_data.delete()
-    return redirect('/memlist/')
+    return redirect('/home/memlist/')
     # return render(request,'member_list.html')
 
 def mem_update(request,member_no):
@@ -136,8 +156,8 @@ def domem_update(request,member_no):
     mem_data.mem_sex = v_msex
     mem_data.mem_sex_val=v_sex_val
     mem_data.save()
-    
-    return redirect('/memlist/')
+   
+    return redirect('/home/memlist/')
 
 def acc_add(request):
     grp_data=acc_group.objects.all()
@@ -153,7 +173,6 @@ def account_save(request):
           v_grp_id = request.POST['group']   
           v_grp_name = acc_group.objects.get(id=v_grp_id).grp_name
           acc_check =  account_head.objects.filter(acc_name=v_acc_name).exists()
-#            print(acc_check)
           if not acc_check :
               mymem = account_head(acc_name = v_acc_name, grp_id_id = v_grp_id , op_bal = v_opbal, grp_nm = v_grp_name)
               mymem.save()
@@ -190,7 +209,7 @@ def doacc_update(request,id):
 def acc_delete(request,id):
     vacc_data = account_head.objects.get(pk=id)
     vacc_data.delete()
-    return redirect('/acclist/')
+    return redirect('/home/acclist/')
 
 def trans_add(request,id):
     # Voucher No generation code
@@ -443,27 +462,136 @@ def vch_save(request,vch_no):
     v_trans_detail=vch_trans.objects.filter(vch_no = v_vchno)
     return render(request,'transaction_entry.html',{'trty_data':trty_data,'acc_data':acc_data,'v_trans':v_trans,'v_trans_detail':v_trans_detail})
 
-
-
 def int_cal(request):
+        error_msg=""
         if request.method == 'POST':
             v_acc_id = request.POST['acc_name']
             v_int_month = request.POST['int_month']
             v_int_year = request.POST['int_year']
             v_int_rate = request.POST['int_rate']
             m_yrmn=int(v_int_year)*100+int(v_int_month)
-#            print(m_yrmn)
             rec_cheK=int_cal_controll.objects.filter(yrmn=m_yrmn).exists()
             if not rec_cheK :
-#                    print(rec_cheK)
+                    int_cal_controll.objects.create(yrmn=m_yrmn,int_rt=v_int_rate,int_acc_id=v_acc_id,vch_no=0)
+            else :
+                 error_msg="Interest for the month already definded"
+
+        acc_data=account_head.objects.filter(id=535)
+        return render(request,'interest_cal.html',{'acc_data':acc_data,'msg':error_msg})
+
+def int_cal_n(request):
+        error_msg=""
+        v_vch_control=vch_control.objects.get(pk=3)
+        v_no = v_vch_control.st_no+1
+        v_vch_control.st_no=v_no
+        v_vch_control.save()
+        vch_control_srno(tr_type = 3 , st_no =v_no,stsr_no =  0).save()
+        v_vch_control_srno = vch_control_srno.objects.get(pk =v_no)
+        v_sr = v_vch_control_srno.stsr_no+1
+                    
+        v_vch_control_srno.stsr_no=v_sr
+        v_vch_control_srno.save()
+                    
+        v_srno_1 = (v_no*1000)+v_sr
+        #End Voucher Generation code
+        v_narr= 'Over all Interest for the Year'
+        Voucher_date= date.today()
+        vch_trans(trans_type = 3, vch_no = v_no, vch_no_srno = v_srno_1, narr= v_narr, vch_date = Voucher_date, vch_acc_head = "Interest", vch_acc_id = 535, vch_dc = "D", vch_amt = 0, srno = v_sr ).save()
+        mem_det=member_detail.objects.all()
+        over_all_int_amt = 0
+        for mem in mem_det:
+            mem_acc_id=mem.acc_id
+            if mem_acc_id != None :
+                mem_acc_data=account_head.objects.get(id=mem_acc_id)
+                mem_acc_name=mem_acc_data.acc_name
+                mem_opbal=mem_acc_data.op_bal
+                mem_int_amt = 0
+                v_vch_control_srno = vch_control_srno.objects.get(pk =v_no)
+                v_sr = v_vch_control_srno.stsr_no+1
+                v_vch_control_srno.stsr_no=v_sr
+                v_vch_control_srno.save()
+                v_srno_2 = (v_no*1000)+v_sr
+                rec_cheK=int_cal_controll.objects.filter(vch_no = 0)
+                for int_cnt in rec_cheK :
+                    v_int_rate=int_cnt.int_rt
+                    v_int_acc_id=int_cnt.int_acc_id
+                    m_yrmn=str(int_cnt.yrmn)
+                    try :
+                        int_acc_data=account_head.objects.get(id=v_int_acc_id)
+                        int_acc_nm= int_acc_data.acc_name
+                    except account_head.DoesNotExist:
+                        int_acc_nm = "Invalid Account"
+                  
+                    v_int_month = int(m_yrmn[4:6])
+                    v_int_year = int(m_yrmn[:4])
                     days=30
                     leap = 0
-                    if int(v_int_year) % 400 == 0:
+                    if (int(v_int_year) % 400 == 0) and (int(v_int_year) % 100 == 0):
+                            leap = 1
+                    elif (int(v_int_year) % 4 ==0) and (int(v_int_year) % 100 != 0):
+                            leap = 1
+                    if int(v_int_month) == 2:
+                            days = 28 + leap
+                    v_month=int(v_int_month)    
+                    m_list = [1,3,5,7,8,10,12]
+                    if v_month in m_list:
+                        days = 31          
+                    f_dt = date(int(v_int_year), int(v_int_month), 1)      
+                    v_dt = date(int(v_int_year), int(v_int_month), days)
+                    v_trans1=vch_trans.objects.filter(vch_acc_id=mem_acc_id,vch_date__lte=v_dt)  
+                    v_trans_amt=0
+                    for vch_data in v_trans1 :
+                        if vch_data.vch_dc == "D":
+                                v_trans_amt = v_trans_amt - vch_data.vch_amt
+                        else:
+                                v_trans_amt = v_trans_amt + vch_data.vch_amt
+                    v_trans_amt = mem_opbal + v_trans_amt+ mem_int_amt
+                    if v_trans_amt > 0 :
+                        mem_int_amt = mem_int_amt+ (round(((float(v_trans_amt) * float(v_int_rate)) / 100),0))
+                        over_all_int_amt = over_all_int_amt + (round(((float(v_trans_amt) * float(v_int_rate)) / 100),0))            
+                    
+                    v_trans=vch_trans.objects.get(vch_no_srno=v_srno_1)
+                    v_trans.vch_amt = over_all_int_amt
+                    v_trans.vch_acc_id = v_int_acc_id
+                    v_trans.vch_date = v_dt
+                    v_trans.vch_acc_head = int_acc_nm
+                    v_narr= 'Over all Interest for the Year '+str(v_int_month)+'/'+str(v_int_year)
+                    v_trans.narr = v_narr
+                    v_trans.save()
+                #enter member interest amount in transaction table
+                v_vch_control_srno = vch_control_srno.objects.get(pk =v_no)
+                v_sr = v_vch_control_srno.stsr_no+1
+                v_vch_control_srno.stsr_no=v_sr
+                v_vch_control_srno.save()
+                v_srno_2 = (v_no*1000)+v_sr
+                v_narr_2= 'Interest for the period '+str(v_int_month)+'/'+str(v_int_year)
+                vch_trans(trans_type = 3, vch_no = v_no, vch_no_srno = v_srno_2,  narr= v_narr_2, vch_date = v_dt, vch_acc_head = mem_acc_name, vch_acc_id = mem_acc_id, vch_dc = "C", vch_amt = mem_int_amt,srno = v_sr).save()
+        rec_cheK=int_cal_controll.objects.filter(vch_no = 0)
+        for int_cnt in rec_cheK :
+            int_cnt.tr_type = 3
+            int_cnt.vch_no = v_no
+            int_cnt.save()
+        acc_data=account_head.objects.filter(id=535)
+        return render(request,'interest_cal.html',{'acc_data':acc_data})
+
+
+def int_cal_ol(request):
+        if request.method == 'POST':
+            v_acc_id = request.POST['acc_name']
+            v_int_month = request.POST['int_month']
+            v_int_year = request.POST['int_year']
+            v_int_rate = request.POST['int_rate']
+            m_yrmn=int(v_int_year)*100+int(v_int_month)
+
+            rec_cheK=int_cal_controll.objects.filter(yrmn=m_yrmn).exists()
+            if not rec_cheK :
+                    days=30
+                    leap = 0
+                    if (int(v_int_year) % 400 == 0) and (int(v_int_year) % 100 == 0):
                         leap = 1
-                    elif int(v_int_year) % 100 == 0:
-                        leap = 0
-                    elif int(v_int_year) % 4 == 0:
+                    elif (int(v_int_year) % 4 ==0) and (int(v_int_year) % 100 != 0):
                         leap = 1
+
                     if int(v_int_month) == 2:
                         days = 28 + leap
 
@@ -471,24 +599,14 @@ def int_cal(request):
                     m_list = [1,3,5,7,8,10,12]
                     if v_month in m_list:
                         days = 31
-
-#                    print(days)
-#                    print(v_int_month)
-                    
                     v_dt = date(int(v_int_year), int(v_int_month), days)
-#                   print(v_dt.strftime("%m"))
-#                   print(v_dt)
-            
                     acc_data1=account_head.objects.get(id=v_acc_id)
                     ac_name=acc_data1.acc_name        
-
-                    # Voucher No generation code
                     trty_data=vch_type.objects.get(trans_type=3)
                     v_vch_control=vch_control.objects.get(pk=3)
                     v_no = v_vch_control.st_no+1
                     v_vch_control.st_no=v_no
                     v_vch_control.save()
-                    
                     vch_control_srno(tr_type = 3 , st_no =v_no,stsr_no =  0).save()
                     v_vch_control_srno = vch_control_srno.objects.get(pk =v_no)
                     v_sr = v_vch_control_srno.stsr_no+1
@@ -499,16 +617,15 @@ def int_cal(request):
                     v_srno_1 = (v_no*1000)+v_sr
                     #End Voucher Generation code
                     v_narr= 'Interest for the month'+str(m_yrmn)
+
                     vch_trans(trans_type = 3, vch_no = v_no, vch_no_srno = v_srno_1, narr= v_narr, vch_date = v_dt, vch_acc_head = ac_name, vch_acc_id = v_acc_id, vch_dc = "D", vch_amt = 0, srno = v_sr ).save()
                     int_cal_controll.objects.create(yrmn=m_yrmn,int_rt=v_int_rate,tr_type = 3,vch_no=v_no )
-
                     mem_det = member_detail.objects.filter()
 
                     vch_amt_d=0
                     for mem in mem_det :
                         mem_acc_id=mem.acc_id
                         if mem_acc_id != None :
-     #                       print(mem_acc_id)
                             mem_acc_data=account_head.objects.get(id=mem_acc_id)
                             mem_acc_name=mem_acc_data.acc_name
                             mem_opbal=mem_acc_data.op_bal
@@ -519,7 +636,7 @@ def int_cal(request):
                                         mem_opbal = mem_opbal - vch_data.vch_amt
                                     else:
                                         mem_opbal = mem_opbal + vch_data.vch_amt
-      #                      print(mem_opbal)
+
                             if mem_opbal > 0 :
                                 mem_int_amt = round(((float(mem_opbal) * float(v_int_rate)) / 100),0)
                                 v_vch_control_srno = vch_control_srno.objects.get(pk =v_no)
@@ -527,14 +644,11 @@ def int_cal(request):
                                 v_vch_control_srno.stsr_no=v_sr
                                 v_vch_control_srno.save()
                                 v_srno_2 = (v_no*1000)+v_sr
-                            
+
                                 vch_amt_d =vch_amt_d + mem_int_amt
-
                                 vch_trans(trans_type = 3, vch_no = v_no, vch_no_srno = v_srno_2,  narr= v_narr, vch_date = v_dt, vch_acc_head = mem_acc_name, vch_acc_id = mem_acc_id, vch_dc = "C", vch_amt = mem_int_amt,srno = v_sr).save()
-
                                 v_srno_1 = (v_no*1000)+1
-                                # print(vch_amt_d)
-                                # print(v_srno_1)
+
                                 v_trans=vch_trans.objects.get(vch_no_srno=v_srno_1)
                                 v_trans.vch_amt = vch_amt_d
                                 v_trans.save()
@@ -749,7 +863,7 @@ def loan_cal_view_list(request):
         v_int_data = loan_cal_controll.objects.get(loan_ac_no = v_loan_ac_no)
         v_loan_name = v_int_data.mem_acc_name
  
-    v_trans = Paginator(loan_repayment_sch.objects.filter(Loan_no= v_loan_ac_no),22)
+    v_trans = Paginator(loan_repayment_sch.objects.filter(Loan_no= v_loan_ac_no),15)
 
     
     # if int(v_cn_val) == 1 :
@@ -822,15 +936,17 @@ def doshare_update(request,share_srno):
             v_cn_val =  request.POST['cn_val']
             v_share_srno = share_srno
 
-            mem_det1= member_detail.objects.get(pk = v_mem_no)
-            v_mem_nm = mem_det1.name
-
-            share_det = mem_share_detail.objects.get(pk= share_srno)
-            share_det.det_date=v_det_date
-            share_det.no_of_share=v_no_of_share
-            share_det.mem_no = v_mem_no
-            share_det.mem_name = v_mem_nm
-            share_det.save()
+            mem_det1= member_detail.objects.filter(pk = v_mem_no)
+ 
+            if mem_det1 :
+                v_mem_nm = mem_det1.name
+                share_det = mem_share_detail.objects.get(pk= share_srno)
+                share_det.det_date=v_det_date
+                share_det.no_of_share=v_no_of_share
+                share_det.mem_no = v_mem_no
+                share_det.mem_name = v_mem_nm
+                share_det.save()
+            
             share_det = mem_share_detail.objects.all()
             return render(request,'share_list.html',{'share_data':share_det})
 
@@ -874,36 +990,26 @@ def cd_cal(request):
                     vch_amt_d=0
                     for mem in mem_det :
                         mem_acc_id=mem.acc_id
+                        # mem_loan_id=mem.loan_acc_no
                         if mem_acc_id != None :
-     #                       print(mem_acc_id)
-     #                       cd_mem_list
                             cd_yrmn= m_yrmn*1000000+int(mem.member_no) 
                             m_loan_acc_id = 0
                             m_emi_pri = 0
                             m_emi_int= 0
                             loan_det_check = loan_repayment_sch.objects.filter(yrmn=m_yrmn , mem_no = mem.member_no).exists() 
-     #                       print(loan_det_check)
                             if loan_det_check :
                                loan_det_sch = loan_repayment_sch.objects.get(yrmn=m_yrmn,mem_no = mem.member_no)
-     #                           print(loan_det_sch)
                                m_loan_acc_id = loan_det_sch.mem_acc_id
                                m_emi_pri = loan_det_sch.monthly_prinipal_amt_deduction
                                m_emi_int= loan_det_sch.loan_int_amt
-                            
                             cd_mem_list(mem_yrmn=cd_yrmn,yrnm = m_yrmn ,mem_no =mem.member_no,mem_name = mem.name, cd_amt = 1000, acc_id = mem_acc_id,loan_acc_id =m_loan_acc_id,
                                         emi_pri= m_emi_pri, emi_int = m_emi_int).save()
-    #                        cd_mem_list.save()
-
         cdlist_data=cd_mem_list.objects.filter(yrnm = m_yrmn)
         return render(request,'cdlist_show.html',{'cdlist_data':cdlist_data,'yr':m_yrmn})
 
 def cd_listupdate(request,mem_yrmn):
     m_mem_yrmn =  mem_yrmn
-#    m_amt = request.GET['acc_opbal']
-#    print(m_yrmn)
-#    print(m_amt)
     cdlist_data=cd_mem_list.objects.get(mem_yrmn = m_mem_yrmn)
-#    print(cdlist_data)
     return render(request,'cdlist_edit.html',{'cdlist_data':cdlist_data,'yr':m_mem_yrmn})
 
 def cd_detupdate(request,mem_yrmn):
@@ -919,12 +1025,17 @@ def cd_detupdate(request,mem_yrmn):
         cdlist_data.mem_no=m_cd_mem_no
         cdlist_data.mem_name=m_cd_mem_name
         cdlist_data.mem_amt = m_cd_mem_amt
-        cdlist_data.emi_pri = m_cd_emi_pri
-        cdlist_data.emi_int = m_cd_emi_int
+        loan_det_check = loan_repayment_sch.objects.filter(mem_no = m_cd_mem_no).exists() 
+        if loan_det_check :
+                cdlist_data.emi_pri = m_cd_emi_pri
+                cdlist_data.emi_int = m_cd_emi_int
+        else :
+                error_msg= m_cd_mem_name+" Member not have any loan so the emi and interest amount can not update"
+        
         cdlist_data.save()
 
     cdlist_data=cd_mem_list.objects.filter(yrnm = m_yrmn)
-    return render(request,'cdlist_show.html',{'cdlist_data':cdlist_data,'yr':m_yrmn})
+    return render(request,'cdlist_show.html',{'cdlist_data':cdlist_data,'yr':m_yrmn,'msg':error_msg})
 
 def cd_vch_post(request):
     error_msg=""
@@ -1023,9 +1134,11 @@ def cd_vch_cal(request):
                     
                             if (cr_amt !=0 ) :
                                 vch_trans(trans_type = 2, vch_no = v_no, vch_no_srno = v_srno_1,  narr = v_narr, vch_date = v_vch_dt, vch_acc_head = bnk_ac_name, vch_acc_id = v_bnk_acc_id, vch_dc = "D", vch_amt = cr_amt, srno = 1  ).save()
+        
                                 cd_data1 = cd_mem_list.objects.get(mem_yrmn = v_mem_yrmn)
                                 cd_data1.vch_no = v_no
                                 cd_data1.save()
+
             else :
                 error_msg="Voucher Already Post"
         
@@ -1035,8 +1148,9 @@ def cd_vch_cal(request):
         return render(request,'cd_vch_post.html',{'acc_data':acc_data,'yr':v_int_month,'msg':error_msg})
 
 def mem_loan_master(request):   
-    mem_det   = member_detail.objects.all()
-    return render(request,'mem_loan_mas.html',{'mem_det':mem_det})
+    mem_det   = member_detail.objects.filter(loan_ac_no = None)
+    # return render(request,'mem_loan_mas.html',{'mem_det':mem_det})
+    return render(request,'loan_mas_cre_list.html',{'mem_det':mem_det})
 
 def mem_loan_view(request):   
     error_msg=''
@@ -1052,30 +1166,48 @@ def mem_loan_view(request):
                 mem_det=member_detail.objects.all()
                 error_msg +='  [The Member has no loan Account]'
                 return render(request,'mem_loan_mas.html',{'mem_det':mem_det,'msg':error_msg})
+        
 
-def mem_loan_add(request):   
+def mem_loan_add(request,member_no):   
     grp_data=acc_group.objects.all()
-    mem_det   = member_detail.objects.all()
-    return render(request,'loan_mas_add.html',{'mem_det':mem_det,'grp_data':grp_data})
+    mem_nm = member_detail.objects.get(pk=member_no)
+    loan_name = mem_nm.name+' Loan A/c'
+    mem_det = member_detail.objects.filter(member_no = member_no )
+    # mem_det   = member_detail.objects.all()
+    return render(request,'loan_mas_add.html',{'mem_det':mem_det,'grp_data':grp_data,'loan_name':loan_name})
 
 def mem_loan_mas_sv(request):
         error_msg=""
-        if request.method == 'POST':
-            v_mem_no      =  request.POST['mem_name']
-            v_acc_nm      = request.POST['acc_name']
-            v_grp_id      = request.POST['group'] 
-            v_mem_name  = member_detail.objects.get(member_no=v_mem_no).name
-            v_grp_name = acc_group.objects.get(id=v_grp_id).grp_name
-            mymem = account_head(acc_name = v_acc_nm, grp_id_id = v_grp_id ,  grp_nm = v_grp_name)
-            mymem.save()
-            v_acc_id = account_head.objects.get(acc_name=v_acc_nm).id
+        try :
+            if request.method == 'POST':
+                v_mem_no      =  request.POST['mem_name']
+                v_acc_nm      = request.POST['acc_name']
+                v_grp_id      = request.POST['group'] 
+                v_mem_name  = member_detail.objects.get(member_no=v_mem_no).name
+                v_grp_name = acc_group.objects.get(id=v_grp_id).grp_name
+                mymem = account_head(acc_name = v_acc_nm, grp_id_id = v_grp_id ,  grp_nm = v_grp_name)
+                mymem.save()
+                v_acc_id = account_head.objects.get(acc_name=v_acc_nm).id
+                loan_mas = loan_master(loan_mem_no = v_mem_no,loan_mem_nm = v_mem_name, loan_acc_id = v_acc_id, loan_acc_nm = v_acc_nm, disb_amt = 0 , loan_int =0 , out_amt = 0, out_int =0, loan_status = 1)
+                loan_mas.save()
+                error_msg="Loan Account Created Successfully of "+v_mem_name
+                mem_data1= member_detail.objects.get(member_no = v_mem_no )
+                mem_data1.loan_ac_no = v_acc_id
+                mem_data1.save()
+        except Exception as e:
+                # error_msg="Error : "+str(e)
+                error_msg="Error : Loan Account Not Created due to not selected proper information"
 
-            loan_mas = loan_master(loan_mem_no = v_mem_no,loan_mem_nm = v_mem_name, loan_acc_id = v_acc_id, loan_acc_nm = v_acc_nm, disb_amt = 0 , loan_int =0 , out_amt = 0, out_int =0, loan_status = 1)
-            loan_mas.save()
-
-        grp_data=acc_group.objects.all()
-        mem_det   = member_detail.objects.all()
-        return render(request,'loan_mas_add.html',{'mem_det':mem_det,'grp_data':grp_data})
+                # grp_data=acc_group.objects.all()
+                # mem_nm = member_detail.objects.get(pk=member_no)
+                # loan_name = mem_nm.name+' Loan A/c'
+                # mem_det = member_detail.objects.filter(member_no = member_no )
+    # mem_det   = member_detail.objects.all()
+                # return render(request,'loan_mas_add.html',{'mem_det':mem_det,'grp_data':grp_data,'loan_name':loan_name,'msg':error_msg})
+        finally:
+                grp_data=acc_group.objects.all()
+                mem_det   = member_detail.objects.filter(loan_ac_no = None)
+        return render(request,'loan_mas_cre_list.html',{'mem_det':mem_det,'grp_data':grp_data,'msg':error_msg})
 
 def daybook_view(request):
         dt=date.today()    
@@ -1085,33 +1217,29 @@ def daybook_list(request):
         error_msg=""
         if request.method == 'POST':
             v_vch_dt= request.POST['vch_stdt']
-
             daybook_data = vch_trans.objects.filter(vch_date__gte = v_vch_dt).order_by('vch_date')
-#        print(daybook_data)
         return render(request,'daybooklist.html',{'day_data':daybook_data,'v_dt':v_vch_dt})
 
 
 def vch_trans_edit(request,vch_no):
         error_msg=""
-#        v_trans_detail=vch_trans.objects.get(vch_no_srno=vch_no)
-#    print(v_trans_detail)
         v_srno_1 = (vch_no*1000)+1
         m_vchno=vch_no
-#        print(m_vchno)
         v_trans=vch_trans.objects.get(vch_no_srno=v_srno_1)
         tr_ty=v_trans.trans_type
         trty_data=vch_type.objects.get(trans_type=tr_ty)
         acc_data=account_head.objects.all()
         v_trans_detail=vch_trans.objects.filter(vch_no = m_vchno)
-#        print(v_trans_detail)
-#        v_srno_1 = (v_trans_detail.vch_no*1000)+1
-#        v_trans=vch_trans.objects.get(vch_no_srno=v_srno_1)
         return render(request,'transaction_entry.html',{'trty_data':trty_data,'acc_data':acc_data,'v_trans':v_trans,'v_trans_detail':v_trans_detail,'sv_ty':tr_ty,'v_srno_1':v_srno_1})
 
 def ledger_view(request):
         dt=date.today()    
+        if 'username' in request.POST:
+            v_user = request.POST['username']
+        else:
+            v_user = False
         acc_data=account_head.objects.all()
-        return render(request,'ledgerview.html',{'acc_data':acc_data,'f_dt':dt,'t_dt':dt})
+        return render(request,'ledgerview.html',{'acc_data':acc_data,'f_dt':dt,'t_dt':dt,'uname':v_user})
 
 def ledger_list(request):
         error_msg=""
@@ -1123,8 +1251,6 @@ def ledger_list(request):
             acc_name  = acc_dt.acc_name
             led_opbal = acc_dt.op_bal
 
-#            loan_ac_name=acc_data1.acc_name        
-#                            for share_data in mem_share_det :
             ledger_opbalcal_data = vch_trans.objects.filter(vch_acc_id=v_acc_nm, vch_date__lt = vF_vch_dt).order_by('vch_date')
             led_opbal = 0
             for led_data in ledger_opbalcal_data :
@@ -1132,15 +1258,11 @@ def ledger_list(request):
                       led_opbal = led_opbal - led_data.vch_amt
                  if led_data.vch_dc == "C" :
                       led_opbal = led_opbal + led_data.vch_amt
-#            print(led_opbal)     
+    
             daybook_data = vch_trans.objects.filter(vch_acc_id=v_acc_nm, vch_date__gte = vF_vch_dt ,vch_date__lte = tF_vch_dt).order_by('vch_date')
- 
-#            daybook_data = vch_trans.objects.filter(vch_acc_id=v_acc_nm).order_by('vch_date')
-#            print(daybook_data)
             ledger_temp.objects.all().delete()
             led_tmp = ledger_temp(vch_no = 1 , vch_date = vF_vch_dt, vch_amt = 0 ,trans_type = 4, narr = "Opening Balance", cb_bal = led_opbal)
             led_tmp.save()
-
             for day_data in daybook_data :
                   m_vch_no = day_data.vch_no 
                   m_vch_date = day_data.vch_date
@@ -1156,12 +1278,11 @@ def ledger_list(request):
                        led_opbal = led_opbal - m_vch_amt
                   if m_vch_dc == "C":
                        led_opbal = led_opbal + m_vch_amt
-
                   led_tmp = ledger_temp(vch_no = m_vch_no, vch_date = m_vch_date, vch_acc_head = m_vch_acc_head, vch_amt = m_vch_amt, trans_type = m_trans_type, vch_acc_id = m_vch_acc_id, vch_no_srno = m_vch_no_srno, vch_dc = m_vch_dc, srno = m_srno, narr = m_narr, cb_bal = led_opbal)
                   led_tmp.save()
-                  led_data=ledger_temp.objects.all()
+            led_data=ledger_temp.objects.all()
 
-#        print(daybook_data)
+
         return render(request,'ledgerlist.html',{'day_data':led_data,'acc_head_name':acc_name,'fv_dt':vF_vch_dt,'tv_dt':tF_vch_dt})
 
 def trail_view(request):
@@ -1173,8 +1294,6 @@ def trail_list(request):
         if request.method == 'POST':
             vF_vch_dt= request.POST['vch_stdt']
             tF_vch_dt= request.POST['vch_enddt']
-#            loan_ac_name=acc_data1.acc_name  
-
             acc_data=account_head.objects.all()
             trail_temp.objects.all().delete()
             for acc_dt in acc_data :
@@ -1182,17 +1301,25 @@ def trail_list(request):
                  m_acc_nm= acc_dt.acc_name
                  m_grp_id = acc_dt.grp_id_id
                  m_grp_nm = acc_dt.grp_nm
-                 m_opbal = acc_dt.op_bal
+                 if acc_dt.op_bal == None :
+                     m_opbal = 0
+                 else :
+                    m_opbal = acc_dt.op_bal
+
                  led_tmp = trail_temp(trail_acc_id = m_acc_id, trail_acc_name = m_acc_nm, trail_grp_id = m_grp_id, trail_grp_name = m_grp_nm, trail_opbal = m_opbal, trail_debit = 0, trail_credit = 0 , trail_cbbal =0 , fr_dt = vF_vch_dt , to_dt = tF_vch_dt )
                  led_tmp.save()
 
-            ledger_opbalcal_data = vch_trans.objects.filter(vch_date__lte = tF_vch_dt, ).order_by('vch_date')
-            for led_data in ledger_opbalcal_data :
+
+        ledger_opbalcal_data = vch_trans.objects.filter(vch_date__lte = tF_vch_dt, ).order_by('vch_date')
+     
+        for led_data in ledger_opbalcal_data :
                  m_led_acc_id = led_data.vch_acc_id
                  m_amt = led_data.vch_amt
                  m_dc= led_data.vch_dc
                  if (m_led_acc_id != None):
+ 
                     trail_temp_data = trail_temp.objects.get(trail_acc_id = m_led_acc_id)
+ 
                     v_op = float(trail_temp_data.trail_opbal)
                     if m_dc == "D" :
                           trail_temp_data.trail_debit = trail_temp_data.trail_debit +  m_amt
@@ -1208,12 +1335,11 @@ def trail_list(request):
                     if m_cb < 0 :
                          trail_temp_data.dc  = "D"
                          trail_temp_data.trail_cbbal = abs(m_cb)
-                         
-                         
-                    trail_temp_data.save()
-            led_data = trail_temp.objects.all()
 
-#        print(daybook_data)
+
+                    trail_temp_data.save()
+        led_data = trail_temp.objects.all()
+
         return render(request,'traillist.html',{'day_data':led_data,'fv_dt':vF_vch_dt,'tv_dt':tF_vch_dt})
 
 def trail_led_list(request,trail_acc_id):
@@ -1233,12 +1359,15 @@ def trail_led_list(request,trail_acc_id):
                  if led_data.vch_dc == "C" :
                       led_opbal = led_opbal + led_data.vch_amt
 #            print(led_opbal)     
+
         daybook_data = vch_trans.objects.filter(vch_acc_id=v_acc_nm, vch_date__gte = vF_vch_dt ,vch_date__lte = tF_vch_dt).order_by('vch_date')
+#        print(daybook_data)
         ledger_temp.objects.all().delete()
+
         led_tmp = ledger_temp(vch_no = 1 , vch_date = vF_vch_dt, vch_amt = 0 ,trans_type = 4, narr = "Opening Balance", cb_bal = led_opbal)
         led_tmp.save()
-
-        for day_data in daybook_data :
+        if daybook_data :
+            for day_data in daybook_data :
                   m_vch_no = day_data.vch_no 
                   m_vch_date = day_data.vch_date
                   m_vch_acc_head = day_data.vch_acc_head 
@@ -1256,7 +1385,7 @@ def trail_led_list(request,trail_acc_id):
 
                   led_tmp = ledger_temp(vch_no = m_vch_no, vch_date = m_vch_date, vch_acc_head = m_vch_acc_head, vch_amt = m_vch_amt, trans_type = m_trans_type, vch_acc_id = m_vch_acc_id, vch_no_srno = m_vch_no_srno, vch_dc = m_vch_dc, srno = m_srno, narr = m_narr, cb_bal = led_opbal)
                   led_tmp.save()
-                  led_data=ledger_temp.objects.all()
+        led_data=ledger_temp.objects.all()
 
         return render(request,'tr_led_view.html',{'day_data':led_data,'acc_head_name':acc_name,'fv_dt':vF_vch_dt,'tv_dt':tF_vch_dt})
 
@@ -1336,8 +1465,6 @@ def member_exclu_show(request):
         mem_data = member_detail.objects.filter(resign_date__gte = vF_vch_dt , resign_date__lte = tF_vch_dt )
     return render(request,'mem_exclu_list.html',{'view_data':mem_data,'fv_dt':vF_vch_dt,'tv_dt':tF_vch_dt})
         
-
-
 def member_complete_list(request):  
         dt=date.today()    
         return render(request,'member_comp_list.html',{'f_dt':dt,'t_dt':dt})

@@ -22,15 +22,11 @@
                             <label class-"form-label"  class="md-3 ml-8" >Upto Date </label>
                             <input type="date"  class="form-control" name="vch_stdt" id="vch_db" placeholder="Date"  value={{f_dt|date:"Y-m-d"}} autocomplete="off" required maxlength="10" size="10">
                         </div>                
-                        {% comment %} <div class="intr2">
-                            <label class-"form-label"  class="md-3 ml-8" >To >Date </label>
-                            <input type="date"  class="form-control" name="vch_enddt" id="vch_enddb" placeholder="Date"  value={{t_dt|date:"Y-m-d"}} autocomplete="off" required maxlength="10" size="10">
-                        </div>                 {% endcomment %}
 
                         <br>
                         <div class="container text-center my-1" >
                             <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" type="submit">View</button>
-                            <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}" >Exit</a></button>
+                            <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'home' %}" >Exit</a></button>
                         </div> 
                         {% if msg  %}
                             <div class="alert alert-danger" style="text-align:center;" role="alert">

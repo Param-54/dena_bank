@@ -51,7 +51,7 @@
                             <small style="color: yellow ; font-size: 15px;font-weight: bold" id="name_chk"></small>
                         </div>
                         <div class="intr2">
-                                <label>Bank Account Head</label>
+                                <label>Member Loan Account </label>
                                 <select name="acc_name" id="accnm" class="form-control" class="form-select"  onchange="grp_select()" >
                                     <option  selected >Select Account</option>
                                     {% for acc_y in acc_data %}
@@ -73,7 +73,7 @@
                         <br>
                         <div class="container text-center my-1" >
                             <button class="btn btn-primary" style ="background-color: rgb(42, 165, 144); border-radius: 10px;" type="submit">Save</button>
-                            <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'main' %}" >Exit</a></button>
+                            <button class="btn btn-sucess text-white" style ="background-color: red; border-radius: 10px;" ><a href="{% url 'home' %}" >Exit</a></button>
                         </div> 
                         {% if msg  %}
                             <div class="alert alert-danger" style="text-align:center;" role="alert">

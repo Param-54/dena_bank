@@ -27,6 +27,12 @@
             <div style="width: 400px; margin:auto; text-align:center; background-color: beige;  border-radius: 20px;">
                 <h4 class="text-center text-danger my-3">Account Head List</h4>
             </div>
+            <div class="container text-center my-1">
+                <button style= "background-color: azure;    border-radius: 10px; "><a href="{% url 'accadd' %}" >Add New</a></button>
+                <button style= " background-color: azure;  border-radius:10px;"><a href="{% url 'home' %}" >Main Maenu</a></button>
+            </div>
+       
+                    <div style="width:750px;margin:auto; height:400px; overflow-x: auto;"> 
                         <table >
                             <thead>
                                 <tr align="center">
@@ -36,7 +42,7 @@
                                     <th>Group</th>
                                     <th colspan="2" align="text-center">Action</th> 
                                     <!-- <button style= "background-color: azure;   margin-left: 1290px; border-radius: 10px; "><a href="{% url 'detail' %}" >Add New</a> -->
-                                    <button style= "margin-left: 1165px; background-color: azure;border-radius:10px;"><a href="{% url 'main' %}" >Main Maenu</a>                                   
+                                    {% comment %} <button style= "margin-left: 1165px; background-color: azure;border-radius:10px;"><a href="{% url 'home' %}" >Main Maenu</a>                                    {% endcomment %}
                                 </tr>
                             </thead>
                             <tbody> 
@@ -52,6 +58,7 @@
                                 {% endfor %}
                             </tbody>
                         </table>
+                </div
     </div>    
 </body>
 </html>

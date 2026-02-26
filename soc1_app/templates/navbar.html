@@ -1,6 +1,10 @@
-<nav class = "navbar navbar-expand-lg navbar-light bg-success text-white"  style="border-radius: 0px 0px 20px 20px; width: 1100px; height:40px ;margin: auto;">
- 
+<form method="post" action="">
+    {% csrf_token %}
+<nav class = "navbar navbar-expand-lg navbar-light bg-success text-white"  style="border-radius: 0px 0px 20px 20px; width: 1300px; height:40px ;margin: auto;">
+
+  
     <a class="navbar-brand" href="#"></a>
+    <input type="hidden" name="username" value="{{ uname }}"> 
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -17,7 +21,6 @@
             <div class="dropdown-divider "></div>
             <a class="dropdown-item" href="mem_loan_master/">Member Loan Account creation</a>
           </div>
-
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-expanded="false">Transaction</a>
@@ -32,9 +35,17 @@
         <li class="nav-item active">
           <a class="nav-link text-white" href="shareadd/9"  >Share Detail</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" href="intcal/">Interest Calculation</a>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-expanded="false">Interest</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="intcal/">Interest Rate Define</a>
+            <a class="dropdown-item" href="intcal_n/">Interest Calculation</a>
+           
+          </div>
         </li>
+
+
         <li class="nav-item active">
           <a class="nav-link text-white" href="divcal/" >Dividend Calculation</a>
         </li>
@@ -62,7 +73,7 @@
           <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-expanded="false">Reports</a>
           <div class="dropdown-menu">
             <a class="dropdown-item" href="daybook_view/" >Daybook</a>
-            <a class="dropdown-item" href="ledger_view/" >Ledger</a>
+            <a class="dropdown-item" href="ledger_view/"  >Ledger</a>
             <a class="dropdown-item" href="trail_view/" >Trail Balance</a>
             <a class="dropdown-item" href="mem_complete_list/" >Member Complete List</a>
 
@@ -74,13 +85,26 @@
           </div>
         </li>
         
-        <li class="nav-item">
-          <a class="nav-link disabled text-white">Disabled</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-expanded="false">user Management</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#" >Change Password</a>
+            <a class="dropdown-item" href="#" >Add User</a>
+            <a class="dropdown-item" href="/" >Logout</a>
+
+            {% comment %} <a class="dropdown-item" href="acclist/">Ledger</a> {% endcomment %}
+            {% comment %} <div class="dropdown-divider "></div> {% endcomment %}
+            {% comment %} <a class="dropdown-item" href="loanrepview/">Loan Repayment Schedule</a>
+            <a class="dropdown-item" href="sharelist/">Share Detail</a>
+            <a class="dropdown-item" href="#">Daybook</a> {% endcomment %}
+          </div>
         </li>
+        <li class="nav-item active">
+          <a class="nav-link text-white" href="#" >{{uname}}</a>
+        </li>
+
       </ul>
-      <!-- <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form> -->
+ 
     </div>
 </nav>
+</form>
