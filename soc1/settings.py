@@ -77,11 +77,19 @@ WSGI_APPLICATION = 'soc1.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default='mysql://root:Vimoware%4067@127.0.0.1:3306/vipuldb',
-        conn_max_age=600,
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'railway',
+        'USER': 'root',
+        'PASSWORD': 'rZTZGrbhOSmjddomOLzMSKonZxzYFWsh',
+        'HOST': 'gondola.proxy.rlwy.net',
+        'PORT': '41918',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        }
+    }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
